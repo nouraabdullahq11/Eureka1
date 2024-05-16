@@ -11,6 +11,17 @@
 		1489725F2BF5660600C3BCC3 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1489725E2BF5660600C3BCC3 /* ContentView.swift */; };
 		148972612BF5660800C3BCC3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 148972602BF5660800C3BCC3 /* Assets.xcassets */; };
 		148972642BF5660800C3BCC3 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 148972632BF5660800C3BCC3 /* Preview Assets.xcassets */; };
+		1489726C2BF5670B00C3BCC3 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 1489726B2BF5670B00C3BCC3 /* FirebaseFirestore */; };
+		1489726E2BF5671500C3BCC3 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1489726D2BF5671500C3BCC3 /* GoogleService-Info.plist */; };
+		148972702BF5673F00C3BCC3 /* HomePage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1489726F2BF5673F00C3BCC3 /* HomePage.swift */; };
+		148972722BF5675A00C3BCC3 /* Sheets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 148972712BF5675A00C3BCC3 /* Sheets.swift */; };
+		148972742BF5677200C3BCC3 /* Trials.swift in Sources */ = {isa = PBXBuildFile; fileRef = 148972732BF5677200C3BCC3 /* Trials.swift */; };
+		148972762BF5678500C3BCC3 /* Sessions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 148972752BF5678500C3BCC3 /* Sessions.swift */; };
+		148972782BF5679D00C3BCC3 /* Adding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 148972772BF5679D00C3BCC3 /* Adding.swift */; };
+		1489727A2BF567B700C3BCC3 /* StartSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 148972792BF567B700C3BCC3 /* StartSession.swift */; };
+		1489727C2BF567D900C3BCC3 /* SummaryListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1489727B2BF567D900C3BCC3 /* SummaryListView.swift */; };
+		1489727E2BF5680100C3BCC3 /* DataItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1489727D2BF5680100C3BCC3 /* DataItem.swift */; };
+		148972802BF5682700C3BCC3 /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1489727F2BF5682700C3BCC3 /* DataManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -19,6 +30,16 @@
 		1489725E2BF5660600C3BCC3 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		148972602BF5660800C3BCC3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		148972632BF5660800C3BCC3 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		1489726D2BF5671500C3BCC3 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		1489726F2BF5673F00C3BCC3 /* HomePage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomePage.swift; sourceTree = "<group>"; };
+		148972712BF5675A00C3BCC3 /* Sheets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sheets.swift; sourceTree = "<group>"; };
+		148972732BF5677200C3BCC3 /* Trials.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Trials.swift; sourceTree = "<group>"; };
+		148972752BF5678500C3BCC3 /* Sessions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sessions.swift; sourceTree = "<group>"; };
+		148972772BF5679D00C3BCC3 /* Adding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Adding.swift; sourceTree = "<group>"; };
+		148972792BF567B700C3BCC3 /* StartSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartSession.swift; sourceTree = "<group>"; };
+		1489727B2BF567D900C3BCC3 /* SummaryListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SummaryListView.swift; sourceTree = "<group>"; };
+		1489727D2BF5680100C3BCC3 /* DataItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataItem.swift; sourceTree = "<group>"; };
+		1489727F2BF5682700C3BCC3 /* DataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -26,6 +47,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1489726C2BF5670B00C3BCC3 /* FirebaseFirestore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -52,7 +74,17 @@
 			isa = PBXGroup;
 			children = (
 				1489725C2BF5660600C3BCC3 /* Eureka1App.swift */,
+				148972732BF5677200C3BCC3 /* Trials.swift */,
+				148972752BF5678500C3BCC3 /* Sessions.swift */,
+				148972772BF5679D00C3BCC3 /* Adding.swift */,
+				148972792BF567B700C3BCC3 /* StartSession.swift */,
+				1489727F2BF5682700C3BCC3 /* DataManager.swift */,
+				1489727D2BF5680100C3BCC3 /* DataItem.swift */,
+				1489727B2BF567D900C3BCC3 /* SummaryListView.swift */,
+				1489726F2BF5673F00C3BCC3 /* HomePage.swift */,
+				148972712BF5675A00C3BCC3 /* Sheets.swift */,
 				1489725E2BF5660600C3BCC3 /* ContentView.swift */,
+				1489726D2BF5671500C3BCC3 /* GoogleService-Info.plist */,
 				148972602BF5660800C3BCC3 /* Assets.xcassets */,
 				148972622BF5660800C3BCC3 /* Preview Content */,
 			);
@@ -83,6 +115,9 @@
 			dependencies = (
 			);
 			name = Eureka1;
+			packageProductDependencies = (
+				1489726B2BF5670B00C3BCC3 /* FirebaseFirestore */,
+			);
 			productName = Eureka1;
 			productReference = 148972592BF5660600C3BCC3 /* Eureka1.app */;
 			productType = "com.apple.product-type.application";
@@ -111,6 +146,9 @@
 				Base,
 			);
 			mainGroup = 148972502BF5660600C3BCC3;
+			packageReferences = (
+				1489726A2BF5670B00C3BCC3 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+			);
 			productRefGroup = 1489725A2BF5660600C3BCC3 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -127,6 +165,7 @@
 			files = (
 				148972642BF5660800C3BCC3 /* Preview Assets.xcassets in Resources */,
 				148972612BF5660800C3BCC3 /* Assets.xcassets in Resources */,
+				1489726E2BF5671500C3BCC3 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -137,8 +176,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1489727E2BF5680100C3BCC3 /* DataItem.swift in Sources */,
+				148972782BF5679D00C3BCC3 /* Adding.swift in Sources */,
 				1489725F2BF5660600C3BCC3 /* ContentView.swift in Sources */,
+				148972702BF5673F00C3BCC3 /* HomePage.swift in Sources */,
+				148972762BF5678500C3BCC3 /* Sessions.swift in Sources */,
+				148972742BF5677200C3BCC3 /* Trials.swift in Sources */,
 				1489725D2BF5660600C3BCC3 /* Eureka1App.swift in Sources */,
+				148972722BF5675A00C3BCC3 /* Sheets.swift in Sources */,
+				148972802BF5682700C3BCC3 /* DataManager.swift in Sources */,
+				1489727A2BF567B700C3BCC3 /* StartSession.swift in Sources */,
+				1489727C2BF567D900C3BCC3 /* SummaryListView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -280,6 +328,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -309,6 +358,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -344,6 +394,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		1489726A2BF5670B00C3BCC3 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 10.26.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		1489726B2BF5670B00C3BCC3 /* FirebaseFirestore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1489726A2BF5670B00C3BCC3 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFirestore;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 148972512BF5660600C3BCC3 /* Project object */;
 }
