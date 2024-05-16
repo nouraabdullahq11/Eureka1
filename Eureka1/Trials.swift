@@ -292,6 +292,14 @@ generator.impactOccurred()
 
 
 
+
+/////////////////////////////////ANSW QUAESTION ////////////////////////////////////////////////
+
+
+
+
+
+
 struct try_AnsQuestions: View {
 @EnvironmentObject var dataManager: DataManager
 @State private var showPopup = false
@@ -300,16 +308,26 @@ struct try_AnsQuestions: View {
 @State private var checkedIndex: Int? = nil  // Optional Int to keep track of which checkbox is checked
 
 @State private var isTimerRunning = false
-@State private var timeRemaining = 180  // 3 minutes in seconds
+@State private var timeRemaining = 90  // 3 minutes in seconds
 
 var body: some View {
 NavigationView {
     ZStack {
-        Image("background")
-            .resizable()
-            .aspectRatio(contentMode: .fill)
-            .edgesIgnoringSafeArea(.all)
+        Color.gray1
+            .ignoresSafeArea()
         
+        Image("backgrund")
+            .resizable()
+            .frame(width: 400 , height: 170)
+            .padding(.bottom,820)
+        
+        Text("Answer the Question")
+            .font(.title)
+            .bold()
+            .foregroundColor(.white)
+            .padding(.trailing , 100)
+            .padding(.bottom , 710)
+      
         VStack {
             Text(formattedTime(timeRemaining))
                 .font(.system(size: 60, weight: .bold))
@@ -328,15 +346,17 @@ NavigationView {
                     checkedIndex = nil
                 }
                 .padding(.bottom, 10)
-                .foregroundColor(.orange)
+                .foregroundColor(.orange1)
                 
                 VStack {
                     ForEach(0..<3, id: \.self) { index in
                         HStack {
                             if !userInputs[index].isEmpty {
-                                Image(systemName: checkedIndex == index ? "checkmark.square" : "square")
+                                Image(systemName: checkedIndex == index ? "checkmark.circle" : "circle")
                                     .resizable()
-                                    .frame(width: 24, height: 24)
+                                    .foregroundColor(.button)
+                                    .frame(width: 22, height: 22)
+                                    .padding(.trailing , 20)
                                     .onTapGesture {
                                         if checkedIndex == index {
                                             checkedIndex = nil  // Uncheck if already checked
@@ -351,22 +371,41 @@ NavigationView {
                                     startTimer()
                                 }
                             })
-                            .textFieldStyle(RoundedBorderTextFieldStyle())
-                            .padding()
-                        }
+                            .foregroundColor(.black)
+                            .accentColor(.black)
+                            .frame(maxWidth: .infinity)
+                            .frame(height: 45)
+                            .background(Color.white)
+                            .overlay(
+                          RoundedRectangle(cornerRadius: 5)
+                         .stroke(Color.white, lineWidth: 2)
+                                          )
+                           
+                        } .padding(.leading , 20)
+                            .padding(.trailing , 15)
+                            .padding(.bottom , 30)
                     }
                 }.padding(.bottom, 80)
-                
                 VStack {
                     Text("* check mark the one that resonates with you the most.")
                         .foregroundColor(.gray)
                         .frame(alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+                        .font(.system(size: 12))
                     
-                    NavigationLink("Next", destination: AnsQuestions_Summ(texts: [""], userInputs: userInputs, checkedInput: checkedIndex != nil ? userInputs[checkedIndex!] : "None", displayedQuestion: dataManager.questions[currentIndex].text))
-                        .frame(width: 337, height: 39)
-                        .background(Color.orange)
-                        .foregroundColor(.white)
-                        .clipShape(RoundedRectangle(cornerRadius: 10))
+                    
+                    
+                    NavigationLink(
+                            destination: AnsQuestions_Summ(texts: [""], userInputs: userInputs, checkedInput: userInputs[checkedIndex ?? 0], displayedQuestion: dataManager.questions[currentIndex].text),
+                            isActive: .constant(checkedIndex != nil),
+                            label: {
+                                Text("Next")
+                                    .frame(width: 337, height: 39)
+                                    .background(Color.button)
+                                    .foregroundColor(.white)
+                                    .clipShape(RoundedRectangle(cornerRadius: 5))
+                            }
+                        )
+                        .padding(.bottom, 20)
                 }
                 
             } else {
@@ -374,7 +413,7 @@ NavigationView {
                     .padding()
             }
         }
-        .navigationTitle("Questions")
+       // .navigationTitle("Questions")
         .navigationBarItems(trailing: Button(action: {
             showPopup.toggle()
         }, label: {
@@ -565,6 +604,10 @@ NavigationStack{
 }
 
 
+/////////////////////////////////Random word ////////////////////////////////////////////////
+
+
+
 
 
 struct try_RandomWords: View {
@@ -574,34 +617,43 @@ struct try_RandomWords: View {
 @State private var dragState = CGSize.zero
 @State private var likedWordBoxes: [String?] = Array(repeating: nil, count: 3)
 @State private var isTimerRunning = false
-@State private var timeRemaining = 6
+@State private var timeRemaining = 60
 @State private var navigateToNextPage = false
 
 var timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
 
+    
+@Environment(\.colorScheme) var colorScheme
+        
+    
 var body: some View {
 NavigationView {
     ZStack {
-        Image("background")
+        Color.gray1
+            .ignoresSafeArea()
+        
+        Image("backgrund")
             .resizable()
-            .aspectRatio(contentMode: .fill)
-            .edgesIgnoringSafeArea(.all)
-            .ignoresSafeArea(.all)
+            .frame(width: 400 , height: 150)
+            .padding(.bottom,750)
 
         VStack {
             Text("Random Word")
-                .font(.system(size: 33, weight: .semibold))
-                .padding(.bottom, 60)
-                .padding(.trailing, 130)
-
+                .font(.system(size: 29, weight: .semibold))
+                .padding(.bottom,680)
+                .padding(.trailing, 170)
+                .foregroundColor(colorScheme == .dark ? .black : .white)
+        }
+            VStack {
             Text(timerString)
                 .font(.system(size: 60, weight: .bold))
-                .padding(.bottom, 50)
+                .padding(.top, 150)
+                .padding(.bottom, 20)
 
             Text("Double-tap meaningful words or swipe to change.")
                 .font(.system(size: 18, weight: .medium))
                 .multilineTextAlignment(.center)
-                .padding(.bottom, 30)
+                .padding(.bottom, 60)
 
             if !dataManager.words.isEmpty {
                 ZStack {
@@ -632,6 +684,15 @@ NavigationView {
                             .animation(.spring(), value: dragState)
                             .animation(.spring(), value: currentIndex)
                     }
+                    
+                    
+                    RoundedRectangle(cornerRadius: 10)
+                   .foregroundColor(Color.white1) // Background color of the card
+                   .shadow(color: colorScheme == .dark ? Color.gray.opacity(0.1) : Color.gray.opacity(0.5), radius: 10, x: 0, y: 2) // Add shadow
+                   .frame(width: 300, height: 280)
+                   .rotationEffect(.degrees(7))
+                    
+                    
                 }
                 .onTapGesture(count: 2) {
                     if likedWords.count < 3 {
@@ -693,8 +754,8 @@ NavigationView {
 }
 
 var timerString: String {
-let minutes = timeRemaining / 6
-let seconds = timeRemaining % 6
+let minutes = timeRemaining / 60
+let seconds = timeRemaining % 60
 
 if minutes < 10 {
     return String(format: "%d:%02d", minutes, seconds)
@@ -706,7 +767,7 @@ if minutes < 10 {
 func startTimerIfNeeded() {
 if !isTimerRunning {
     isTimerRunning = true
-    timeRemaining = 6
+    timeRemaining = 60
 }
 }
 
@@ -728,6 +789,8 @@ for (index, word) in likedWords.enumerated() {
 }
 }
 
+
+
 struct try_RandomWords2: View {
 var likedWords: [String]
 @State private var enteredValues: [String]
@@ -747,43 +810,95 @@ var isNextStepButtonEnabled: Bool {
 return enteredValues.allSatisfy { !$0.isEmpty }
 }
 
+@State private var checkedIndex: Int? = nil  // Optional Int to keep track of which checkbox is checked
+    
+@Environment(\.colorScheme) var colorScheme
+    
 var body: some View {
 NavigationView {
     ZStack {
-        Image("background")
+        Color.gray1
+            .ignoresSafeArea()
+        
+        Image("backgrund")
             .resizable()
-            .aspectRatio(contentMode: .fill)
-            .edgesIgnoringSafeArea(.all)
-            .ignoresSafeArea(.all)
+            .frame(width: 400 , height: 150)
+            .padding(.bottom,750)
+        
         Spacer()
         ScrollView {
           
             VStack {
                 Text("Random Word")
-                    .font(.system(size: 33, weight: .semibold))
-                    .padding(.top, 60)
-                    .padding(.trailing, 130)
-               
+                    .font(.system(size: 29, weight: .semibold))
+                    .padding(.top, 95)
+                    .padding(.trailing, 170)
+                    .foregroundColor(colorScheme == .dark ? .black : .white)
+                
+                
                 Text(timerString)
                     .font(.system(size: 60, weight: .bold))
-                    .padding(.top, 20)
+                    .padding(.top, 25)
+                    .padding(.bottom, 20)
                 
                 Text("Place these words into possible ideas or solutions:")
-                    .font(.system(size: 20, weight: .semibold))
-                  //  .padding(.bottom, 60)
+                    .font(.system(size: 17, weight: .medium))
+                    .padding(.bottom, 30)
+                    .padding(.trailing , 50)
                 
                 VStack {
                     ForEach(0..<likedWords.count, id: \.self) { index in
                         VStack {
-                            Text(likedWords[index])
-                                .font(.system(size: 18))
-                                .padding(.bottom, 10)
-                                .padding(.trailing, 220)
-                            TextField("Enter a value", text: $enteredValues[index])
-                                .textFieldStyle(RoundedBorderTextFieldStyle())
+                            HStack {
+                                Text("First word:")
+                                    .font(.system(size: 15))
+                                    .padding(.bottom, 10)
+                                    .padding(.leading ,-160 )
+                                Text(likedWords[index])
+                                    .font(.system(size: 15))
+                                    .padding(.bottom, 10)
+                                    .padding(.leading ,-90 )
+                            }.padding(.leading, 50)
+                            .foregroundColor(.gray)
+                            TextField("Enter The Sentnce", text: $enteredValues[index])
+                                .padding()
+                                .frame(width: 300, height: 40)
+                                .background(
+                                    RoundedRectangle(cornerRadius: 10)
+                                        .foregroundColor(Color.white)
+                                        .shadow(radius: 3)
+                              
+                                ).padding(.bottom, 25)
+                                .padding(.leading , 15)
+.overlay(
+                
+                
+                
+
+                  Image(systemName: checkedIndex == index ? "checkmark.circle.fill" : "circle")
+                      .resizable()
+                      .foregroundColor(checkedIndex == index ? Color.button : Color.gray)
+                      .frame(width: 22, height: 22)
+                      .padding(.trailing , 350)
+                      .onTapGesture {
+                          
+                          
+                          
+                          
+                          
+                          if checkedIndex == index {
+                              checkedIndex = nil  // Uncheck if already checked
                             
+                          } else {
+                              checkedIndex = index  // Check new index
+                             
+                              
+                          }
+                      }
+
+                    )
                             
-                        }
+                        }.frame(maxWidth: .infinity)
                         
                     }
                     Button(action: {
@@ -867,36 +982,46 @@ if !isTimerRunning {
 }
 
 
+struct try_RandomWords2_Previews: PreviewProvider {
+    static var previews: some View {
+        let likedWords: [String] = ["Idea 1", "Idea 2", "Idea 3"]
+        return try_RandomWords2(likedWords: likedWords)
+            .environmentObject(DataManager()) // If you use EnvironmentObject
+    }
+}
+
 
 struct CardView1: View {
 var word: String
-
+    @Environment(\.colorScheme) var colorScheme
 var body: some View {
 Text(word)
     .font(.largeTitle)
-    .frame(width: 300, height: 200)
-    .background(Color.white)
+    .frame(width: 300, height: 280)
+    .background(Color.white1)
     .cornerRadius(10)
-    .shadow(radius: 5)
-    .foregroundColor(.black)
-    .overlay(
-        RoundedRectangle(cornerRadius: 10).stroke(Color.gray, lineWidth: 1)
-    )
+.shadow(color: colorScheme == .dark ? Color.white.opacity(0.02) : Color.gray.opacity(0.5), radius: 5, x: 0, y: 2)
+.foregroundColor(colorScheme == .dark ? .white : .black)
+
+//    .overlay(
+//        RoundedRectangle(cornerRadius: 10).stroke(Color.gray, lineWidth: 1)
+//    )
 }
 }
 
 struct LikedWordBox: View {
 var word: String
-
+    @Environment(\.colorScheme) var colorScheme
 var body: some View {
-RoundedRectangle(cornerRadius: 10)
-    .stroke(Color.orange, lineWidth: 2) // Orange border
-    .frame(width: 100, height: 50)
-    .foregroundColor(.white) // White background
-    .overlay(
-        Text(word)
-            .foregroundColor(.black) // Text color
-    )
+    RoundedRectangle(cornerRadius: 10)
+        .stroke(colorScheme == .dark ? .gray : .white, lineWidth: 1) // Orange border
+        .frame(width: 100, height: 50)
+        .background(.white1) // White background
+       // .shadow(radius: 0.5)
+        .overlay(
+            Text(word)
+                .foregroundColor(colorScheme == .dark ? .white : .black) // Text color
+        )
 }
 }
 struct RWSummary: View {
@@ -1462,6 +1587,11 @@ try_AnsQuestions().environmentObject(DataManager())
 }
 }
 
+struct try_RandomWords_Previews: PreviewProvider {
+    static var previews: some View {
+        try_RandomWords().environmentObject(DataManager())
+    }
+}
 
 struct try_Crazy8_Previews: PreviewProvider {
 static var previews: some View {
