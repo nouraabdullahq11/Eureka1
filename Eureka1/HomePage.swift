@@ -40,7 +40,7 @@ var body: some View {
                 
                 ZStack{
                     
-                    NavigationLink(destination: StartSession(promtSelection: 0, generaterSelection: 0)){
+                    NavigationLink(destination: StartSession(likedWords: [], promtSelection: 0, generaterSelection: 0)){
                         VStack{
                             Image(.backgrund)
                                 .resizable()
@@ -319,7 +319,7 @@ var body: some View {
         
         
     }
-    
+    //
     
     }.navigationBarBackButtonHidden(true)
 }

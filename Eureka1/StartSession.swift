@@ -11,7 +11,7 @@ import SwiftData
 
 struct StartSession: View {
 //@State private var isSessionStarted: Bool = false // Track if session started
-
+    var likedWords: [String]
 @State private var TextInbut = ""
 @State private var TextInbut2 = ""
 
@@ -216,7 +216,7 @@ var body: some View {
                               }
                     }
                     else{
-                        NavigationLink(destination: session_AnsQuestions(items: items, sessionName: sessionName, generaterSelection:$generaterSelection), isActive: $isSessionStarted) {
+                        NavigationLink(destination: session_AnsQuestions(likedWords: likedWords, items: items, sessionName: sessionName, generaterSelection:$generaterSelection), isActive: $isSessionStarted) {
                                    EmptyView() // Empty view to trigger navigation
                               }
                     }

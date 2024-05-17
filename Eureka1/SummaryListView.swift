@@ -27,7 +27,7 @@ var body: some View {
             // Add more details about the item here
         }
         .navigationBarTitle("Details", displayMode: .inline)
-    }.navigationBarBackButtonHidden(true)
+    }
 }
 }
 

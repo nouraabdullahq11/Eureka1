@@ -19,10 +19,12 @@ init() {
 }
 var body: some Scene {
     WindowGroup {
-        NavigationView{
-
+        NavigationStack{
+            
             HomePage()
-    }}
+        }
+        //.navigationBarBackButtonHidden(true)
+    }
 .modelContainer(for: DataItem.self) // Provide model container for DataItem
 .environmentObject(dataManager)    }
 }
