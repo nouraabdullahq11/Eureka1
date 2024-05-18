@@ -10,6 +10,7 @@
 import SwiftUI
 import SwiftData
 import Firebase
+import Lottie
 @main
 struct Eureka1App: App {
 @StateObject var dataManager = DataManager()

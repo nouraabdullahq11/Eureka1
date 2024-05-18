@@ -22,6 +22,17 @@
 		1489727C2BF567D900C3BCC3 /* SummaryListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1489727B2BF567D900C3BCC3 /* SummaryListView.swift */; };
 		1489727E2BF5680100C3BCC3 /* DataItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1489727D2BF5680100C3BCC3 /* DataItem.swift */; };
 		148972802BF5682700C3BCC3 /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1489727F2BF5682700C3BCC3 /* DataManager.swift */; };
+		1EFF23ED2BF815A4002BFD45 /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = 1EFF23EC2BF815A4002BFD45 /* Lottie */; };
+		1EFF23EF2BF816B0002BFD45 /* Animation5.json in Resources */ = {isa = PBXBuildFile; fileRef = 1EFF23EE2BF816B0002BFD45 /* Animation5.json */; };
+		1EFF23F12BF816EC002BFD45 /* Animation10.json in Resources */ = {isa = PBXBuildFile; fileRef = 1EFF23F02BF816EB002BFD45 /* Animation10.json */; };
+		1EFF23F32BF81711002BFD45 /* Animation2.json in Resources */ = {isa = PBXBuildFile; fileRef = 1EFF23F22BF81711002BFD45 /* Animation2.json */; };
+		1EFF23F52BF81732002BFD45 /* Animation6.json in Resources */ = {isa = PBXBuildFile; fileRef = 1EFF23F42BF81732002BFD45 /* Animation6.json */; };
+		1EFF23F72BF8175A002BFD45 /* Animation11.json in Resources */ = {isa = PBXBuildFile; fileRef = 1EFF23F62BF8175A002BFD45 /* Animation11.json */; };
+		1EFF23F92BF81789002BFD45 /* Animation13.json in Resources */ = {isa = PBXBuildFile; fileRef = 1EFF23F82BF81789002BFD45 /* Animation13.json */; };
+		1EFF23FB2BF817D1002BFD45 /* Animation15.json in Resources */ = {isa = PBXBuildFile; fileRef = 1EFF23FA2BF817D0002BFD45 /* Animation15.json */; };
+		1EFF23FD2BF819ED002BFD45 /* OnBording.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EFF23FC2BF819ED002BFD45 /* OnBording.swift */; };
+		1EFF23FF2BF81A1D002BFD45 /* AnimationOnbording.json in Resources */ = {isa = PBXBuildFile; fileRef = 1EFF23FE2BF81A1D002BFD45 /* AnimationOnbording.json */; };
+		1EFF24012BF821DD002BFD45 /* SplashScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EFF24002BF821DD002BFD45 /* SplashScreen.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -40,6 +51,16 @@
 		1489727B2BF567D900C3BCC3 /* SummaryListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SummaryListView.swift; sourceTree = "<group>"; };
 		1489727D2BF5680100C3BCC3 /* DataItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataItem.swift; sourceTree = "<group>"; };
 		1489727F2BF5682700C3BCC3 /* DataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataManager.swift; sourceTree = "<group>"; };
+		1EFF23EE2BF816B0002BFD45 /* Animation5.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Animation5.json; sourceTree = "<group>"; };
+		1EFF23F02BF816EB002BFD45 /* Animation10.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Animation10.json; sourceTree = "<group>"; };
+		1EFF23F22BF81711002BFD45 /* Animation2.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Animation2.json; sourceTree = "<group>"; };
+		1EFF23F42BF81732002BFD45 /* Animation6.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Animation6.json; sourceTree = "<group>"; };
+		1EFF23F62BF8175A002BFD45 /* Animation11.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Animation11.json; sourceTree = "<group>"; };
+		1EFF23F82BF81789002BFD45 /* Animation13.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Animation13.json; sourceTree = "<group>"; };
+		1EFF23FA2BF817D0002BFD45 /* Animation15.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Animation15.json; sourceTree = "<group>"; };
+		1EFF23FC2BF819ED002BFD45 /* OnBording.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnBording.swift; sourceTree = "<group>"; };
+		1EFF23FE2BF81A1D002BFD45 /* AnimationOnbording.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = AnimationOnbording.json; sourceTree = "<group>"; };
+		1EFF24002BF821DD002BFD45 /* SplashScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashScreen.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -48,6 +69,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1489726C2BF5670B00C3BCC3 /* FirebaseFirestore in Frameworks */,
+				1EFF23ED2BF815A4002BFD45 /* Lottie in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -74,6 +96,8 @@
 			isa = PBXGroup;
 			children = (
 				1489725C2BF5660600C3BCC3 /* Eureka1App.swift */,
+				1EFF24002BF821DD002BFD45 /* SplashScreen.swift */,
+				1EFF23FC2BF819ED002BFD45 /* OnBording.swift */,
 				148972732BF5677200C3BCC3 /* Trials.swift */,
 				148972752BF5678500C3BCC3 /* Sessions.swift */,
 				148972772BF5679D00C3BCC3 /* Adding.swift */,
@@ -86,6 +110,14 @@
 				1489725E2BF5660600C3BCC3 /* ContentView.swift */,
 				1489726D2BF5671500C3BCC3 /* GoogleService-Info.plist */,
 				148972602BF5660800C3BCC3 /* Assets.xcassets */,
+				1EFF23EE2BF816B0002BFD45 /* Animation5.json */,
+				1EFF23F02BF816EB002BFD45 /* Animation10.json */,
+				1EFF23F22BF81711002BFD45 /* Animation2.json */,
+				1EFF23F42BF81732002BFD45 /* Animation6.json */,
+				1EFF23F62BF8175A002BFD45 /* Animation11.json */,
+				1EFF23F82BF81789002BFD45 /* Animation13.json */,
+				1EFF23FA2BF817D0002BFD45 /* Animation15.json */,
+				1EFF23FE2BF81A1D002BFD45 /* AnimationOnbording.json */,
 				148972622BF5660800C3BCC3 /* Preview Content */,
 			);
 			path = Eureka1;
@@ -117,6 +149,7 @@
 			name = Eureka1;
 			packageProductDependencies = (
 				1489726B2BF5670B00C3BCC3 /* FirebaseFirestore */,
+				1EFF23EC2BF815A4002BFD45 /* Lottie */,
 			);
 			productName = Eureka1;
 			productReference = 148972592BF5660600C3BCC3 /* Eureka1.app */;
@@ -148,6 +181,7 @@
 			mainGroup = 148972502BF5660600C3BCC3;
 			packageReferences = (
 				1489726A2BF5670B00C3BCC3 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				1EFF23EB2BF815A4002BFD45 /* XCRemoteSwiftPackageReference "lottie-ios" */,
 			);
 			productRefGroup = 1489725A2BF5660600C3BCC3 /* Products */;
 			projectDirPath = "";
@@ -163,8 +197,16 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1EFF23EF2BF816B0002BFD45 /* Animation5.json in Resources */,
+				1EFF23F32BF81711002BFD45 /* Animation2.json in Resources */,
+				1EFF23F72BF8175A002BFD45 /* Animation11.json in Resources */,
 				148972642BF5660800C3BCC3 /* Preview Assets.xcassets in Resources */,
+				1EFF23F52BF81732002BFD45 /* Animation6.json in Resources */,
 				148972612BF5660800C3BCC3 /* Assets.xcassets in Resources */,
+				1EFF23F12BF816EC002BFD45 /* Animation10.json in Resources */,
+				1EFF23F92BF81789002BFD45 /* Animation13.json in Resources */,
+				1EFF23FF2BF81A1D002BFD45 /* AnimationOnbording.json in Resources */,
+				1EFF23FB2BF817D1002BFD45 /* Animation15.json in Resources */,
 				1489726E2BF5671500C3BCC3 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -183,7 +225,9 @@
 				148972762BF5678500C3BCC3 /* Sessions.swift in Sources */,
 				148972742BF5677200C3BCC3 /* Trials.swift in Sources */,
 				1489725D2BF5660600C3BCC3 /* Eureka1App.swift in Sources */,
+				1EFF24012BF821DD002BFD45 /* SplashScreen.swift in Sources */,
 				148972722BF5675A00C3BCC3 /* Sheets.swift in Sources */,
+				1EFF23FD2BF819ED002BFD45 /* OnBording.swift in Sources */,
 				148972802BF5682700C3BCC3 /* DataManager.swift in Sources */,
 				1489727A2BF567B700C3BCC3 /* StartSession.swift in Sources */,
 				1489727C2BF567D900C3BCC3 /* SummaryListView.swift in Sources */,
@@ -404,6 +448,14 @@
 				minimumVersion = 10.26.0;
 			};
 		};
+		1EFF23EB2BF815A4002BFD45 /* XCRemoteSwiftPackageReference "lottie-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/airbnb/lottie-ios.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.4.3;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -411,6 +463,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 1489726A2BF5670B00C3BCC3 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseFirestore;
+		};
+		1EFF23EC2BF815A4002BFD45 /* Lottie */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1EFF23EB2BF815A4002BFD45 /* XCRemoteSwiftPackageReference "lottie-ios" */;
+			productName = Lottie;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

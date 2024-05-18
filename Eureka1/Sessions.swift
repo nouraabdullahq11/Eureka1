@@ -16,6 +16,7 @@
 import SwiftUI
 import CoreHaptics
 import SwiftData
+import  Lottie
 
 struct session_RandomWords: View {
     var items: [DataItem]
@@ -611,6 +612,92 @@ var body: some View {
                         Text("\(timeRemaining / 60):\(String(format: "%02d", timeRemaining % 60))")
                             .font(.largeTitle)
                             .bold()
+                        LottieView(animation: .named("Animation5"))
+                            .playbackMode(.playing(.toProgress(1, loopMode: .loop)))
+                            .resizable()
+                            .frame(width: 140)
+                     
+                            .offset(x:140 , y: 120)
+                        
+                        LottieView(animation: .named("Animation10"))
+                            .playbackMode(.playing(.toProgress(1, loopMode: .loop)))
+                            .resizable()
+                      
+                            .frame(width: 150)
+                            .opacity(0.5)
+                                                      
+                            .offset(x:100 , y: -150)
+                        
+                        LottieView(animation: .named("Animation2"))
+                            .playbackMode(.playing(.toProgress(1, loopMode: .loop)))
+                            .resizable()
+                            .frame(width: 100)
+                     
+                            .offset(x:10 , y: -190)
+                        
+                        LottieView(animation: .named("Animation6"))
+                            .playbackMode(.playing(.toProgress(1, loopMode: .loop)))
+                            .resizable()
+                            .frame(width: 150)
+                     
+                            .offset(x:-100 , y: -160)
+                        
+                        
+                        LottieView(animation: .named("Animation11"))
+                            .playbackMode(.playing(.toProgress(1, loopMode: .loop)))
+                            .resizable()
+                .frame(width: 290 )
+                       
+                                                      
+                            .offset(x:-150 , y: 50)
+                        
+                        LottieView(animation: .named("Animation13"))
+                            .playbackMode(.playing(.toProgress(1, loopMode: .loop)))
+                            .resizable()
+                .frame(width: 290 )
+               .opacity(0.3)
+                                                      
+                            .offset(x:-150 , y: -50)
+                        
+                        
+                        LottieView(animation: .named("Animation6"))
+                            .playbackMode(.playing(.toProgress(1, loopMode: .loop)))
+                            .resizable()
+                      
+                            .frame(width: 90)
+                       
+                                                      
+                            .offset(x:-150 , y: 150)
+                        
+                        
+                        LottieView(animation: .named("Animation6"))
+                            .playbackMode(.playing(.toProgress(1, loopMode: .loop)))
+                            .resizable()
+                      
+                            .frame(width: 90)
+                       
+                                                      
+                            .offset(x:150 , y: 20)
+                        
+                        
+                        LottieView(animation: .named("Animation15"))
+                            .playbackMode(.playing(.toProgress(1, loopMode: .loop)))
+                            .resizable()
+                      
+                            .frame(width: 90)
+                       
+                                                      
+                            .offset(x:-160 , y: 90)
+                        LottieView(animation: .named("Animation15"))
+                            .playbackMode(.playing(.toProgress(1, loopMode: .loop)))
+                            .resizable()
+                      
+                            .frame(width: 90)
+                       
+                            .opacity(0.5)
+                            .offset(x:160 , y: -30)
+                       
+                        
                     }
                     .frame(width: 200, height: 200)
                     .onReceive(timer) { _ in

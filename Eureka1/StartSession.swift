@@ -10,6 +10,14 @@ import SwiftUI
 import SwiftData
 
 struct StartSession: View {
+    struct TopLeadingTextFieldStyle: TextFieldStyle {
+        func _body(configuration: TextField<Self._Label>) -> some View {
+            configuration
+                .multilineTextAlignment(.leading)
+                .padding(.leading) // Push text to the left
+               // .padding(.bottom) // Push text to the top
+        }
+    }
 //@State private var isSessionStarted: Bool = false // Track if session started
     var likedWords: [String]
 @State private var TextInbut = ""
@@ -65,28 +73,60 @@ var body: some View {
                         .font(.callout)
                         .padding(.trailing , 180)
                     
-                    TextField("Enter session name", text: $sessionName)
-                        .textFieldStyle(.roundedBorder)
-                        .frame(width: 332)
-                        .cornerRadius(10)
-                        .font(.system(size: 27))
-                        .padding(.bottom , 40)
-                        .onSubmit {
-                            print(TextInbut)
+                    ZStack(alignment: .topLeading) {
+                    TextField("", text: $sessionName)
+                            .frame(maxWidth: .infinity)
+                                .frame(width: 332 , height: 42)
+                                .background(Color.white)
+                                .overlay(
+                                                
+                        RoundedRectangle(cornerRadius: 5)
+                        .stroke(Color.gray2, lineWidth: 1)
+                                       )
+                    .textFieldStyle(TopLeadingTextFieldStyle())
+                                .padding()
+                                .onSubmit {
+                                print(TextInbut)
+                                            }
+                    
+//                    TextField("Enter session name", text: $sessionName)
+//                        .textFieldStyle(.roundedBorder)
+//                        .frame(width: 332)
+//                        .cornerRadius(10)
+//                        .font(.system(size: 27))
+//                        .padding(.bottom , 40)
+//                        .onSubmit {
+//                            print(TextInbut)
                         }
                     Text("Enter session type")
                         .font(.callout)
                         .padding(.trailing , 180)
+                    ZStack(alignment: .topLeading) {
+                        TextField("", text: $TextInbut2)
+                            .frame(maxWidth: .infinity)
+                            .frame(width: 332 , height: 42)
+                            .background(Color.white)
+                            .overlay(
+                                
+                                RoundedRectangle(cornerRadius: 5)
+                                    .stroke(Color.gray2, lineWidth: 1)
+                            )
+                            .textFieldStyle(TopLeadingTextFieldStyle())
+                            .padding()
+                            .onSubmit {
+                                print(TextInbut2)
+                            }
+                    }
                     
-                    TextField("", text: $TextInbut2)
-                        .textFieldStyle(.roundedBorder)
-                        .frame(width: 332)
-                        .cornerRadius(10)
-                        .font(.system(size: 27))
-                        .padding(.bottom , 40)
-                        .onSubmit {
-                            print(TextInbut2)
-                        }
+//                    TextField("", text: $TextInbut2)
+//                        .textFieldStyle(.roundedBorder)
+//                        .frame(width: 332)
+//                        .cornerRadius(10)
+//                        .font(.system(size: 27))
+//                        .padding(.bottom , 40)
+//                        .onSubmit {
+//                            print(TextInbut2)
+//                        }
                     // هذي لازم تنشال بعدين ضفتها للاختصار فقط مفروض تكون مع النافقيشن حق زر ال start الي تحت !!!!!!!!!!!!
 //                        Button("Start session") {
 //                            addItem(sessionName: sessionName)

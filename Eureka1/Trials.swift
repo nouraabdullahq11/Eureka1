@@ -8,7 +8,7 @@
 
 import SwiftUI
 import CoreHaptics
-
+import Lottie
 
 struct try_Crazy8: View {
 @State private var text: String = ""
@@ -35,16 +35,21 @@ NavigationView {
             ZStack{
                 Image("backgrund")
                     .resizable()
-                    .frame(width: 395 , height: 150)
-                
+                  
+                    .overlay(
+
                 
                 Text("Crazy 8")
                     .font(.title)
                     .bold()
                     .foregroundColor(.white)
-                    .padding(.trailing , 100)
-            }.offset(x:0,y: -365)
-            
+                    .padding(.trailing , 220)
+                    .padding(.top ,70)
+                )  .frame(width: 395 , height: 150)
+                
+            }//.offset(x:0,y: -365)
+            .padding(.bottom , 850)
+
             
             VStack {
                 ZStack{
@@ -71,6 +76,93 @@ NavigationView {
                         Text("\(timeRemaining / 60):\(String(format: "%02d", timeRemaining % 60))")
                             .font(.largeTitle)
                             .bold()
+                        
+                        LottieView(animation: .named("Animation5"))
+                            .playbackMode(.playing(.toProgress(1, loopMode: .loop)))
+                            .resizable()
+                            .frame(width: 140)
+                     
+                            .offset(x:140 , y: 120)
+                        
+                        LottieView(animation: .named("Animation10"))
+                            .playbackMode(.playing(.toProgress(1, loopMode: .loop)))
+                            .resizable()
+                      
+                            .frame(width: 150)
+                            .opacity(0.5)
+                                                      
+                            .offset(x:100 , y: -150)
+                        
+                        LottieView(animation: .named("Animation2"))
+                            .playbackMode(.playing(.toProgress(1, loopMode: .loop)))
+                            .resizable()
+                            .frame(width: 100)
+                     
+                            .offset(x:10 , y: -190)
+                        
+                        LottieView(animation: .named("Animation6"))
+                            .playbackMode(.playing(.toProgress(1, loopMode: .loop)))
+                            .resizable()
+                            .frame(width: 150)
+                     
+                            .offset(x:-100 , y: -160)
+                        
+                        
+                        LottieView(animation: .named("Animation11"))
+                            .playbackMode(.playing(.toProgress(1, loopMode: .loop)))
+                            .resizable()
+                .frame(width: 290 )
+                       
+                                                      
+                            .offset(x:-150 , y: 50)
+                        
+                        LottieView(animation: .named("Animation13"))
+                            .playbackMode(.playing(.toProgress(1, loopMode: .loop)))
+                            .resizable()
+                .frame(width: 290 )
+               .opacity(0.3)
+                                                      
+                            .offset(x:-150 , y: -50)
+                        
+                        
+                        LottieView(animation: .named("Animation6"))
+                            .playbackMode(.playing(.toProgress(1, loopMode: .loop)))
+                            .resizable()
+                      
+                            .frame(width: 90)
+                       
+                                                      
+                            .offset(x:-150 , y: 150)
+                        
+                        
+                        LottieView(animation: .named("Animation6"))
+                            .playbackMode(.playing(.toProgress(1, loopMode: .loop)))
+                            .resizable()
+                      
+                            .frame(width: 90)
+                       
+                                                      
+                            .offset(x:150 , y: 20)
+                        
+                        
+                        LottieView(animation: .named("Animation15"))
+                            .playbackMode(.playing(.toProgress(1, loopMode: .loop)))
+                            .resizable()
+                      
+                            .frame(width: 90)
+                       
+                                                      
+                            .offset(x:-160 , y: 90)
+                        LottieView(animation: .named("Animation15"))
+                            .playbackMode(.playing(.toProgress(1, loopMode: .loop)))
+                            .resizable()
+                      
+                            .frame(width: 90)
+                       
+                            .opacity(0.5)
+                            .offset(x:160 , y: -30)
+                       
+                        
                         
                     }
                     .frame(width: 200, height: 200)
@@ -1168,181 +1260,285 @@ NavigationStack{
 }
 
 struct try_ReverseBrainstorming: View {
-
-
-   
+    
+    
+    struct TopLeadingTextFieldStyle: TextFieldStyle {
+        func _body(configuration: TextField<Self._Label>) -> some View {
+            configuration
+                .multilineTextAlignment(.leading)
+                .padding(.leading) // Push text to the left
+                .padding(.bottom , 40) // Push text to the top
+        }
+    }
+    
+    
     @State private var statement = ""
     @State public var answer1 : String = ""
     @State public var Answer2 : String = ""
     @State public var Answer3 : String = ""
-
+    
     var body: some View {
         NavigationStack{
             ZStack{
                 Color.gray1
-                    .ignoresSafeArea()
-                VStack{
-                    ZStack{
-                        Image("backgrund")
-                            .resizable()
-                            .frame(width: 395 , height: 150)
-                        
-                           
-                        Text("Revers Brainstorming")
-                            .font(.title2)
-                            .bold()
-                            .foregroundColor(.white)
-                        .padding(.trailing , 100)
-                      
-                    }.offset(x:0,y: -100)
-                     
+                ZStack{
                     
-                    
-                    Text("Enter your problem statements :")
-                        .padding(.trailing , 100)
-                    TextField("name", text: $statement)
-                        .textFieldStyle(.roundedBorder)
-                        .padding()
-                        .onSubmit {
-                            print(statement)
+                    VStack{
+                        ZStack{
+                            Image("backgrund")
+                                .resizable()
+                            
+                                .overlay(
+                                    
+                                    Text("Revers Brainstorming")
+                                        .font(.title2)
+                                        .bold()
+                                        .foregroundColor(.white)
+                                        .padding(.trailing , 120)
+                                        .padding(.top ,70)
+                                )
+                                .frame(width: 400 , height: 150)
+                            
+                            
                         }
-            Text("How can you make it worse ?")
-                        .padding(.trailing , 100)
-                    
-                    ZStack{
+                        
+                        VStack{
+                            
+                            Text("Enter your problem statements :")
+                                .padding(.trailing , 100)
+                            
+                            ZStack(alignment: .topLeading) {
+                                TextField("Problem statements", text: $statement)
+                                    .frame(maxWidth: .infinity)
+                                    .frame(height: 100)
+                                    .background(Color.white)
+                                    .overlay(
+                                        
+                                        RoundedRectangle(cornerRadius: 5)
+                                            .stroke(Color.white, lineWidth: 2)
+                                        
+                                    )
+                                    .textFieldStyle(TopLeadingTextFieldStyle())
+                                    .padding()
+                                    .onSubmit {
+                                        print(statement)
+                                    }
+                                
+                                
+                            }
+                            Text("How can you make it worse ?")
+                                .padding(.trailing , 100)
+                            
+                            ZStack{
                                 Rectangle()
-                            .frame(width: 343 , height: 82)
-                                        .cornerRadius(10)
-                                .foregroundColor(.orange2)
-                
-                            TextField("name", text: $answer1)
-                                    .frame(width: 322 , height: 63)
-                                .textFieldStyle(.roundedBorder)
-                                               .padding()
+                                    .frame(width: 343 , height: 82)
+                                    .cornerRadius(10)
+                                    .foregroundColor(.orange2)
+                                ZStack(alignment: .topLeading) {
+                                    TextField("name", text: $answer1)
+                                    
+                                        .frame(width: 322,height: 63)
+                                        .background(Color.white)
+                                        .overlay(
+                                            
+                                            RoundedRectangle(cornerRadius: 5)
+                                                .stroke(Color.white, lineWidth: 2)
+                                            
+                                        )
+                                        .textFieldStyle(TopLeadingTextFieldStyle())
+                                        .padding()
                                         .onSubmit {
-          
-                                               }
-                                           
-                                       }
-                                       
-                                       ZStack{
-                                           Rectangle()
-                                               .frame(width: 343 , height: 82)
-                                               .cornerRadius(10)
-                                               .foregroundColor(.orange3)
-                                           TextField("name", text: $Answer2)
-                                               .frame(width: 322 , height: 63)
-                                               .textFieldStyle(.roundedBorder)
-                                               .padding()
-                                               .onSubmit {
-                                               }
-                                           
-                                       }
-                                       ZStack{
-                                           Rectangle()
-                                               .frame(width: 343 , height: 82)
-                                               .cornerRadius(10)
-                                               .foregroundColor(.orange4)
-                                           TextField("Much Worse ", text: $Answer3)
-                                               .frame(width: 322 , height: 63)
-                                               .textFieldStyle(.roundedBorder)
-                                               .padding()
-                                               .onSubmit {
-                                               }
-                                           
-                                       }
-                                       
-                    NavigationLink(destination: ReversAnswers( statement: statement, answer1: $answer1 , answer2: $Answer2 , answer3: $Answer3)) {
-                                           ZStack{
-                                               Rectangle()
-                                                   .frame(width: 337 , height: 39)
-                                                   .cornerRadius(5)
-                                                   .foregroundColor(.laitOrange)
-                                               Text("Next")
-                                                   .foregroundColor(.white)
-                                           }
-                                       }
-
-                    
-                }
+                                            
+                                        }
+                                }
+                            }
+                        }.padding(.top , 40)
+                        ZStack{
+                            Rectangle()
+                                .frame(width: 343 , height: 82)
+                                .cornerRadius(10)
+                                .foregroundColor(.orange3)
+                            ZStack(alignment: .topLeading) {
+                                TextField("name", text: $Answer2)
+                                
+                                    .frame(width: 322,height: 63)
+                                    .background(Color.white)
+                                    .overlay(
+                                        
+                                        RoundedRectangle(cornerRadius: 5)
+                                            .stroke(Color.white, lineWidth: 2)
+                                        
+                                    )
+                                    .textFieldStyle(TopLeadingTextFieldStyle())
+                                    .padding()
+                                    .onSubmit {
+                                        
+                                    }
+                            }
+                            
+                        }
+                        ZStack{
+                            Rectangle()
+                                .frame(width: 343 , height: 82)
+                                .cornerRadius(10)
+                                .foregroundColor(.orange4)
+                            ZStack(alignment: .topLeading) {
+                                TextField("name", text: $Answer3)
+                                
+                                    .frame(width: 322,height: 63)
+                                    .background(Color.white)
+                                    .overlay(
+                                        
+                                        RoundedRectangle(cornerRadius: 5)
+                                            .stroke(Color.white, lineWidth: 2)
+                                        
+                                    )
+                                    .textFieldStyle(TopLeadingTextFieldStyle())
+                                    .padding()
+                                    .onSubmit {
+                                        
+                                    }
+                            }
+                            
+                        }
+                        
+                        NavigationLink(destination: ReversAnswers( statement: statement, answer1: $answer1 , answer2: $Answer2 , answer3: $Answer3)) {
+                            ZStack{
+                                Rectangle()
+                                    .frame(width: 337 , height: 39)
+                                    .cornerRadius(5)
+                                    .foregroundColor(.laitOrange)
+                                Text("Next")
+                                    .foregroundColor(.white)
+                            }.padding(.top , 50)
+                        }
+                        
+                        
+                    }
+                }.padding(.bottom , 110)
             }
-        }.navigationBarBackButtonHidden(true)
+            
+        } .navigationBarBackButtonHidden(true)
     }
     
     struct ReversAnswers: View {
-      
-       var statement: String
+        
+        var statement: String
         @State public var Answer4 = ""
         @State public var Answer5 = ""
         @State public var Answer6 = ""
-       @Binding var answer1 : String
+        @Binding var answer1 : String
         @Binding var answer2 : String
         @Binding var answer3 : String
         var body: some View {
             NavigationStack{
                 ZStack{
                     Color.gray1
-                        .ignoresSafeArea()
-                    VStack{
-                        ZStack{
-                            Image("backgrund")
-                                .resizable()
-                                .frame(width: 395 , height: 150)
-                            
-                            Text("Revers Brainstorming")
-                          
-                                .font(.title2)
-                                .bold()
-                                .foregroundColor(.white)
-                            .padding(.trailing , 100)
-                        }.offset(x:0,y: -120)
-                         
+                    ZStack{
                         
-                            
-                        Text("Revers your answers :")
-                            .padding(.trailing , 100)
-                           
-                                Text("First Answer : \(answer1)")
-                                    .foregroundColor(.gray)
-                                    .bold()
-                                   .padding(.trailing , 100)
-                               
-                            
-                        TextField("name", text: $Answer4)
-                            .textFieldStyle(.roundedBorder)
-                            .padding()
-                            .onSubmit {
-                                print(Answer4)
-                            }
-                     
-                        Text("Second Answer:\(answer2)")
-                            .foregroundColor(.gray)
-                            .bold()
-                        
-                              
-                                 
-                                TextField("name", text: $Answer5)
-                                    .frame(width: 322 , height: 63)
-                                    .textFieldStyle(.roundedBorder)
-                                    .padding()
-                                    .onSubmit {
-                                        print(Answer5)
-                                    }
+                        VStack{
+                            ZStack{
+                                Image("backgrund")
+                                    .resizable()
                                 
-                        Text("Third Answer : \(answer3)")
-                            .foregroundColor(.gray)
-                            .bold()
+                                
+                                    .overlay(
+                                        
+                                        Text("Revers Brainstorming")
+                                            .font(.title2)
+                                            .bold()
+                                            .foregroundColor(.white)
+                                            .padding(.trailing , 120)
+                                            .padding(.top ,70)
+                                    )
+                                    .frame(width: 400 , height: 150)
+                                
+                                
+                            }
                             
-                           
-                                TextField("name", text: $Answer6)
-                                    .frame(width: 322 , height: 63)
-                                    .textFieldStyle(.roundedBorder)
+                            
+                            
+                            
+                            Text("Revers your answers :")
+                                .padding(.trailing , 175)
+                                .padding()
+                            
+                            Text("First Answer : \(answer1)")
+                                .foregroundColor(.gray)
+                                .bold()
+                                .padding(.trailing , 175)
+                                .padding()
+                            
+                            
+                            ZStack(alignment: .topLeading) {
+                                TextField("name", text: $Answer4)
+                                
+                                    .frame(width: 331,height: 58)
+                                    .background(Color.white)
+                                    .overlay(
+                                        
+                                        RoundedRectangle(cornerRadius: 5)
+                                            .stroke(Color.white, lineWidth: 2)
+                                        
+                                    )
+                                    .textFieldStyle(TopLeadingTextFieldStyle())
                                     .padding()
                                     .onSubmit {
-                                        print(Answer6)
+                                        
                                     }
+                            }
                             
-                       
+                            Text("Second Answer:\(answer2)")
+                                .foregroundColor(.gray)
+                                .bold()
+                                .padding(.trailing , 175)
+                                .padding()
+                            
+                            
+                            ZStack(alignment: .topLeading) {
+                                TextField("name", text: $Answer5)
+                                
+                                    .frame(width: 331,height: 58)
+                                    .background(Color.white)
+                                    .overlay(
+                                        
+                                        RoundedRectangle(cornerRadius: 5)
+                                            .stroke(Color.white, lineWidth: 2)
+                                        
+                                    )
+                                    .textFieldStyle(TopLeadingTextFieldStyle())
+                                    .padding()
+                                    .onSubmit {
+                                        
+                                    }
+                            } .padding()
+                            
+                            Text("Third Answer : \(answer3)")
+                                .foregroundColor(.gray)
+                                .bold()
+                                .padding(.trailing , 175)
+                                .padding()
+                            
+                            
+                            ZStack(alignment: .topLeading) {
+                                TextField("name", text: $Answer6)
+                                
+                                    .frame(width: 331,height: 58)
+                                    .background(Color.white)
+                                    .overlay(
+                                        
+                                        RoundedRectangle(cornerRadius: 5)
+                                            .stroke(Color.white, lineWidth: 2)
+                                        
+                                    )
+                                    .textFieldStyle(TopLeadingTextFieldStyle())
+                                    .padding()
+                                    .onSubmit {
+                                        
+                                    }
+                            }
+                            
+                            
                             NavigationLink(destination: ReversAnswers2(answer4: $Answer4, answer5: $Answer5, answer6: $Answer6)){
                                 ZStack{
                                     Rectangle()
@@ -1351,15 +1547,16 @@ struct try_ReverseBrainstorming: View {
                                         .foregroundColor(.laitOrange)
                                     Text("Next")
                                         .foregroundColor(.white)
-                                }
+                                } .padding(.top , 50)
                             }
-                        
+                            
+                            
+                        }
                         
                     }
-               
+                    .padding(.bottom , 110)
                 }
-
-            }.navigationBarBackButtonHidden(true)
+            } .navigationBarBackButtonHidden(true)
         }
     }
     
@@ -1367,54 +1564,117 @@ struct try_ReverseBrainstorming: View {
     struct  ReversAnswers2: View {
         @State private var statement2 = ""
         @Binding var answer4 : String
-         @Binding var answer5 : String
-         @Binding var answer6 : String
-        
+        @Binding var answer5 : String
+        @Binding var answer6 : String
         var body: some View {
             NavigationStack{
                 ZStack{
                     Color.gray1
                         .ignoresSafeArea()
-                    VStack{
-                        ZStack{
-                            Image("backgrund")
-                                .resizable()
-                                .frame(width: 395 , height: 150)
+                    ZStack{
+                        
+                        VStack{
+                            
+                            ZStack{
+                                Image("backgrund")
+                                    .resizable()
+                                
+                                
+                                    .overlay(
+                                        
+                                        Text("Revers Brainstorming")
+                                            .font(.title2)
+                                            .bold()
+                                            .foregroundColor(.white)
+                                            .padding(.trailing , 120)
+                                            .padding(.top ,70)
+                                    )
+                                    .frame(width: 400 , height: 150)
+                                
+                                
+                            } .padding(.bottom , 50)
+                            
+                            //                            ZStack(alignment: .topLeading) {
+                            //                                TextField("name", text: $Answer4)
+                            //
+                            //                                    .frame(width: 331,height: 58)
+                            //                                    .background(Color.white)
+                            //                                    .overlay(
+                            //
+                            //                                        RoundedRectangle(cornerRadius: 5)
+                            //                                            .stroke(Color.white, lineWidth: 2)
+                            //
+                            //                                    )
+                            //                                    .textFieldStyle(TopLeadingTextFieldStyle())
+                            //                                            .padding()
+                            //                                    .onSubmit {
+                            //
+                            //                                    }
+                            //                            }
+                            
+                            //                ZStack(alignment: .topLeading){
+                            //
+                            //Text("The Reversed Answers :\(answer4) \(answer5) \(answer6)")
+                            //
+                            //        .frame(width: 336,height: 156)
+                            //                .background(Color.white)
+                            //                .overlay(
+                            //
+                            //                RoundedRectangle(cornerRadius: 5)
+                            //                .stroke(Color.white, lineWidth: 2)
+                            //
+                            //                                    )
+                            //                .textFieldStyle(TopLeadingTextFieldStyle())
+                            //
+                            //                .onSubmit {
+                            //
+                            //                                    }
+                            //                            } .padding()
+                            
+            ZStack(alignment: .topLeading) {
+            Text("The Reversed Answers: \(answer4) \(answer5) \(answer6)")
+                    .padding(.trailing , 90)
+                    .padding(.bottom , 100)
+                    .multilineTextAlignment(.leading) // Align text to the left
+                    .frame(width: 336, height: 156)
+                        .background(Color.white)
+                        .overlay(
+                        RoundedRectangle(cornerRadius: 5)
+                        .stroke(Color.white, lineWidth: 2)
+                                    )
+            }.padding(.bottom , 150)
+                            
+                            
                             
                             VStack{
-                                Text("Revers Brainstorming ")
-                                    .font(.title2)
-                                    .bold()
-                                    .foregroundColor(.white)
-                                    .padding(.trailing , 100)
-                                //  .padding(.bottom,600)
-                            }
-                        }.offset(x:0,y: -120)
-                         
-                        
-                        
-                        ZStack{
-                            Rectangle()
-                                .frame(width: 361 , height: 156)
-                                .cornerRadius(10)
-                                .foregroundColor(.white)
-                            Text("The Reversed Answers :\(answer4) \(answer5) \(answer6)")
-                        } .padding()
-                     
-                        Text("How can we combine all the the answers into solution ?")
-
+            Text("How can we combine all the the answers into solution ?")
+                    .multilineTextAlignment(.leading)
+                    .padding(.horizontal)
+                                
+                            }.padding()
+                            .padding(.horizontal)
+                            ZStack(alignment: .topLeading) {
                                 TextField("name", text: $statement2)
-                                    .frame(width: 322 , height: 63)
-                                    .textFieldStyle(.roundedBorder)
+                                
+                                    .frame(width: 331,height: 58)
+                                    .background(Color.white)
+                                    .overlay(
+                                        
+                                        RoundedRectangle(cornerRadius: 5)
+                                            .stroke(Color.white, lineWidth: 2)
+                                        
+                                    )
+                                    .textFieldStyle(TopLeadingTextFieldStyle())
                                     .padding()
                                     .onSubmit {
-                                        print(statement2)
+                                        
                                     }
-                                
-                
+                            } .padding()
                             
-                       
-                        NavigationLink(destination: ReverseBSum(texts: [""], statement2:statement2) ){
+                            
+                            
+                            
+                            NavigationLink(destination: HomePage()){
                                 ZStack{
                                     Rectangle()
                                         .frame(width: 337 , height: 39)
@@ -1423,10 +1683,10 @@ struct try_ReverseBrainstorming: View {
                                     Text("Next")
                                         .foregroundColor(.white)
                                 }
-                            }
-                        
-                        
-                    }
+                            }.padding(.top , 50)
+                            
+                        }
+                    } .padding(.bottom , 110)
                 }
             }.navigationBarBackButtonHidden(true)
         }
