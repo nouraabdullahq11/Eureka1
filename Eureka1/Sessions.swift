@@ -1,4 +1,4 @@
-//
+//
 //  Sessions.swift
 //  Eureka1
 //
@@ -30,7 +30,7 @@ struct session_RandomWords: View {
     @State private var dragState = CGSize.zero
     @State private var likedWordBoxes: [String?] = Array(repeating: nil, count: 3)
     @State private var isTimerRunning = false
-    @State private var timeRemaining = 6
+    @State private var timeRemaining = 180
     @State private var navigateToNextPage = false
     @Environment(\.colorScheme) var colorScheme
     var timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
@@ -38,21 +38,29 @@ struct session_RandomWords: View {
     var body: some View {
         NavigationView {
             ZStack {
-                Image("background")
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-                    .edgesIgnoringSafeArea(.all)
-                    .ignoresSafeArea(.all)
+                Color.gray1
+                               .ignoresSafeArea()
+                           
+                           Image("backgrund")
+                               .resizable()
+                               .frame(width: 400 , height: 150)
+                               .padding(.bottom,770)
                 
+                           VStack {
+                               Text("Random Word")
+                                   .font(.system(size: 29, weight: .semibold))
+                                   .padding(.bottom,680)
+                                   .padding(.trailing, 170)
+                                   .foregroundColor(colorScheme == .dark ? .black : .white)
+                           }
                 VStack {
-                    Text("Random Word")
-                        .font(.system(size: 33, weight: .semibold))
-                        .padding(.bottom, 60)
-                        .padding(.trailing, 130)
+                  
                     
                     Text(timerString)
                         .font(.system(size: 60, weight: .bold))
-                        .padding(.bottom, 50)
+                                          .padding(.top, 100)
+                                          .padding(.bottom, 20)
+                    
                         .onReceive(timer) { _ in
                             if isTimerRunning {
                                 if timeRemaining > 0 {
@@ -66,9 +74,9 @@ struct session_RandomWords: View {
                     
                     Text("Double-tap meaningful words or swipe to change.")
                         .font(.system(size: 18, weight: .medium))
-                        .multilineTextAlignment(.center)
-                        .padding(.bottom, 30)
-                    
+                                           .multilineTextAlignment(.center)
+                                           .padding(.bottom, 20)
+
                     if !dataManager.words.isEmpty {
                         ZStack {
                             ForEach(dataManager.words.indices.reversed(), id: \.self) { index in
@@ -97,7 +105,7 @@ struct session_RandomWords: View {
                                     )
                                     .animation(.spring(), value: dragState)
                                     .animation(.spring(), value: currentIndex)
-                            } 
+                            }
                             RoundedRectangle(cornerRadius: 10)
                                 .foregroundColor(Color.white1) // Background color of the card
                                 .shadow(color: colorScheme == .dark ? Color.gray.opacity(0.1) : Color.gray.opacity(0.5), radius: 10, x: 0, y: 2) // Add shadow
@@ -125,7 +133,8 @@ struct session_RandomWords: View {
                             LikedWordBox1(word: likedWordBoxes[index] ?? "")
                         }
                     }
-                    .padding(.top, 50)
+                    .padding(.bottom, 20)
+                    .padding(.top, 30)
                     
                     Button(action: {
                         navigateToNextPage = likedWords.count >= 3
@@ -133,13 +142,16 @@ struct session_RandomWords: View {
                         Text("Next Step")
                             .font(.system(size: 18))
                             .padding()
-                            .background(likedWords.count >= 3 ? Color.orange : Color.gray)
+//                            .background(likedWords.count >= 3 ? Color.orange : Color.gray)
+                            .frame(width: 337, height: 39)
+                            .background(Color.button)
                             .foregroundColor(.white)
-                            .cornerRadius(10)
+                            .clipShape(RoundedRectangle(cornerRadius: 5))
                             .opacity(likedWords.count >= 3 ? 1.0 : 0.5)
                             .disabled(likedWords.count < 3)
                     }
-                    .padding(.top, 30)
+                    .padding(.top, 5)
+                    .padding(.bottom, 30)
                 }
             }.navigationBarBackButtonHidden(true)
             .background(
@@ -152,16 +164,20 @@ struct session_RandomWords: View {
     }
     
     var timerString: String {
-        let minutes = timeRemaining / 6
-        let seconds = timeRemaining % 6
+        let minutes = timeRemaining / 60
+        let seconds = timeRemaining % 60
 
-        return String(format: "%d:%02d", minutes, seconds)
+        if minutes < 10 {
+               return String(format: "%d:%02d", minutes, seconds)
+           } else {
+               return String(format: "%02d:%02d", minutes, seconds)
+           }
     }
     
     func startTimerIfNeeded() {
         if !isTimerRunning {
             isTimerRunning = true
-            timeRemaining = 6
+           // timeRemaining = 6
         }
     }
     
@@ -201,18 +217,20 @@ struct CardView: View {
 
 struct LikedWordBox1: View {
     var word: String
+    @Environment(\.colorScheme) var colorScheme
 
     var body: some View {
-        RoundedRectangle(cornerRadius: 10)
-            .stroke(Color.orange, lineWidth: 2)
-            .frame(width: 100, height: 50)
-            .foregroundColor(.white)
-            .overlay(
-                Text(word)
-                    .foregroundColor(.black)
-            )
+    RoundedRectangle(cornerRadius: 10)
+    .stroke(colorScheme == .dark ? .gray : .white, lineWidth: 1) // Orange border
+    .frame(width: 100, height: 50)
+    .background(.white1) // White background
+    // .shadow(radius: 0.5)
+    .overlay(
+    Text(word)
+    .foregroundColor(colorScheme == .dark ? .white : .black) // Text color
+    )
     }
-}
+    }
 struct session_RandomWords2: View {
     var likedWords: [String]
     @State private var enteredValues: [String]
@@ -221,15 +239,20 @@ struct session_RandomWords2: View {
     @State private var showNextButton: Bool = false
     @State private var navigateToSummary: Bool = false
     @State private var isTimerRunning = false
-    @State private var timeRemaining = 6
+    @State private var timeRemaining = 60
+    @State public var THEFAVORITEONE = ""
+    var currentIndex = 0
+    var userInputs = ["", "", ""]
+    var checkedIndex: Int? = nil
+    @State private var navigateToNextPage = false
 
     var items: [DataItem]
     var sessionName: String
     @Binding var generaterSelection: Int
     @State private var timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
-
+    
     @EnvironmentObject var dataManager: DataManager
-
+    
     init(likedWords: [String], items: [DataItem], sessionName: String, generaterSelection: Binding<Int>) {
         self.likedWords = likedWords
         self.items = items
@@ -237,11 +260,11 @@ struct session_RandomWords2: View {
         self._generaterSelection = generaterSelection
         self._enteredValues = State(initialValue: Array(repeating: "", count: likedWords.count))
     }
-
+    
     var isNextStepButtonEnabled: Bool {
         return enteredValues.allSatisfy { !$0.isEmpty }
     }
-
+    
     var body: some View {
         NavigationView {
             ZStack {
@@ -257,7 +280,7 @@ struct session_RandomWords2: View {
                             .font(.system(size: 33, weight: .semibold))
                             .padding(.top, 60)
                             .padding(.trailing, 130)
-
+                        
                         Text(timerString)
                             .font(.system(size: 60, weight: .bold))
                             .padding(.top, 20)
@@ -270,10 +293,10 @@ struct session_RandomWords2: View {
                                     }
                                 }
                             }
-
+                        
                         Text("Place these words into possible ideas or solutions:")
                             .font(.system(size: 20, weight: .semibold))
-
+                        
                         VStack {
                             ForEach(0..<likedWords.count, id: \.self) { index in
                                 VStack {
@@ -300,27 +323,121 @@ struct session_RandomWords2: View {
                             }
                         }
                         if showCheckmarks {
-                            // Remaining code
+                            ForEach(likedWords, id: \.self) { word in
+                                HStack {
+                                    Image(systemName: selectedWord == word ? "checkmark.square.fill" : "square")
+                                        .resizable()
+                                        .frame(width: 20, height: 20)
+                                        .foregroundColor(.blue)
+                                        .onTapGesture {
+                                            selectedWord = word
+                                            if let index = likedWords.firstIndex(of: word) {
+                                                var updatedInputs = userInputs
+                                                updatedInputs[index] = enteredValues[index]
+                                                if selectedWord == word {
+                                                    THEFAVORITEONE = enteredValues[index]
+                                                }
+                                                
+                                            }
+                                        }
+                                    
+                                    Text(word)
+                                        .font(.system(size: 18))
+                                    
+                                    Spacer()
+                                }
+                            }
                         }
+                        if THEFAVORITEONE != "" {
+                            if generaterSelection == 1{
+                                NavigationLink(destination: session_Crazy8(THEFAVORITEONE: $THEFAVORITEONE, items: items, sessionName: sessionName, userInputs: userInputs, checkedInput: checkedIndex != nil ? userInputs[checkedIndex!] : "None", displayedQuestion: dataManager.questions[currentIndex].text)) {
+                                    Text("Next")
+                                        .frame(width: 337, height: 39)
+                                        .background(Color.button)
+                                        .foregroundColor(.white)
+                                        .clipShape(RoundedRectangle(cornerRadius: 5))
+                                    EmptyView() // Empty view to trigger navigation
+                                }
+                            }
+                            else{
+                                NavigationLink(destination: Session_ReverseBrainstorming(items: items, sessionName: sessionName, userInputs: userInputs, checkedInput: checkedIndex != nil ? userInputs[checkedIndex!] : "None", displayedQuestion: dataManager.questions[currentIndex].text,THEFAVORITEONE: $THEFAVORITEONE)) {
+                                    Text("Next")
+                                        .frame(width: 337, height: 39)
+                                        .background(Color.button)
+                                        .foregroundColor(.white)
+                                        .clipShape(RoundedRectangle(cornerRadius: 5))
+                                    EmptyView() // Empty view to trigger navigation
+                                }
+                            }
+                        }else{
+                            
+                            if generaterSelection == 1 && navigateToNextPage{
+                                NavigationLink(destination: session_Crazy8(THEFAVORITEONE: $THEFAVORITEONE, items: items, sessionName: sessionName, userInputs: userInputs, checkedInput: checkedIndex != nil ? userInputs[checkedIndex!] : "None", displayedQuestion: dataManager.questions[currentIndex].text),isActive: $navigateToNextPage) {
+                                    //                                    Text("Next")
+                                    //                                        .frame(width: 337, height: 39)
+                                    //                                        .background(Color.button)
+                                    //                                        .foregroundColor(.white)
+                                    //                                        .clipShape(RoundedRectangle(cornerRadius: 5))
+                                    EmptyView() // Empty view to trigger navigation
+                                }
+                            }
+                            else if  generaterSelection == 2 && navigateToNextPage {
+                                NavigationLink(destination: Session_ReverseBrainstorming(items: items, sessionName: sessionName, userInputs: userInputs, checkedInput: checkedIndex != nil ? userInputs[checkedIndex!] : "None", displayedQuestion: dataManager.questions[currentIndex].text,THEFAVORITEONE: $THEFAVORITEONE),isActive: $navigateToNextPage) {
+                                    //                                    Text("Next")
+                                    //                                        .frame(width: 337, height: 39)
+                                    //                                        .background(Color.button)
+                                    //                                        .foregroundColor(.white)
+                                    //                                        .clipShape(RoundedRectangle(cornerRadius: 5))
+                                    EmptyView() // Empty view to trigger navigation
+                                }
+                            }
+                            
+                            
+                        }
+                        
+                        
+                        
+                    }.onAppear {
+                        startTimer()
                     }
+                    
                 }
+                
             }
-        }.navigationBarBackButtonHidden(true)
+        }
+        .navigationBarBackButtonHidden(true)
     }
-
+    
     var timerString: String {
-        let minutes = timeRemaining / 6
-        let seconds = timeRemaining % 6
-
-        return String(format: "%d:%02d", minutes, seconds)
+        let minutes = timeRemaining / 60
+        let seconds = timeRemaining % 60
+        
+        if minutes < 10 {
+            return String(format: "%d:%02d", minutes, seconds)
+        } else {
+            return String(format: "%02d:%02d", minutes, seconds)
+        }
+        
     }
-
+    
     func startTimerIfNeeded() {
         if !isTimerRunning {
             isTimerRunning = true
-            timeRemaining = 6
+            //  timeRemaining = 6
         }
     }
+    
+    
+    func startTimer() {
+           Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
+               timeRemaining -= 1
+               if timeRemaining == 0 {
+                   navigateToNextPage = true
+               }
+           }
+       }
+    
+    
 }
 
 
@@ -343,7 +460,9 @@ struct session_AnsQuestions: View {
     @State private var showNextButton: Bool = false
     @State private var navigateToSummary: Bool = false
     @State private var isTimerRunning = false
-    @State private var timeRemaining = 6
+    @State private var timeRemaining = 180
+    @State public var THEFAVORITEONE = ""
+    @State private var navigateToNextPage = false
 
     var items: [DataItem]
     var sessionName: String
@@ -408,7 +527,10 @@ struct session_AnsQuestions: View {
                                                 if checkedIndex == index {
                                                     checkedIndex = nil  // Uncheck if already checked
                                                 } else {
-                                                    checkedIndex = index  // Check new index
+                                                    checkedIndex = index
+                                                    
+                                                    THEFAVORITEONE = userInputs[index]
+// Check new index
                                                 }
                                             }
                                     }
@@ -429,65 +551,78 @@ struct session_AnsQuestions: View {
                                 .foregroundColor(.gray)
                                 .frame(alignment: .center)
 
-                            if generaterSelection == 1 {
-                                NavigationLink(
-                                    destination: session_Crazy8(
-                                        likedWords: likedWords,
-                                        items: items,
-                                               sessionName: sessionName,
-                                               userInputs: enteredValues,
-                                               displayedQuestion: dataManager.questions.first?.text ?? "",
-                                               selectedWord: checkedIndex != nil ? userInputs[checkedIndex!] : ""
-                                           )
-                                ) {
-                                    Text("Next to Crazy 8")
-                                }
-                                .disabled(!isNextStepButtonEnabled || checkedIndex == nil)
-                            } else {
-                                NavigationLink(
-                                    destination: Session_ReverseBrainstorming(
-                                                    items: items,
-                                                    sessionName: sessionName,
-                                                    userInputs: enteredValues,
-                                                    displayedQuestion: dataManager.questions.first?.text ?? "",
-                                                    selectedWord: checkedIndex != nil ? userInputs[checkedIndex!] : "",
-                                                    likedWords: likedWords
-                                                )
-                                            ){
-                                    Text("Next to Reverse Brainstorming")
-                                }
-                                .disabled(!isNextStepButtonEnabled || checkedIndex == nil)
-                            }
-                        }
+                            if generaterSelection == 1{
+                                                NavigationLink(destination: session_Crazy8(THEFAVORITEONE: $THEFAVORITEONE,items: items, sessionName: sessionName, userInputs: userInputs, checkedInput: checkedIndex != nil ? userInputs[checkedIndex!] : "None", displayedQuestion: dataManager.questions[currentIndex].text),isActive: $navigateToNextPage) {
+                                                    Text("next crazy")
+                                                    EmptyView() // Empty view to trigger navigation
+                                                } .frame(width: 337, height: 39)
+                                                    .background(Color.orange)
+                                                    .foregroundColor(.white)
+                                                    .clipShape(RoundedRectangle(cornerRadius: 10))
+                                                    .padding(.top,10)
+                                            }
+                                            else{
+                                                NavigationLink(destination: Session_ReverseBrainstorming(items: items, sessionName: sessionName, userInputs: userInputs, checkedInput: checkedIndex != nil ? userInputs[checkedIndex!] : "None", displayedQuestion: dataManager.questions[currentIndex].text,THEFAVORITEONE: $THEFAVORITEONE),isActive: $navigateToNextPage) {
+                                                    Text("next reverse")
+                                                    EmptyView() // Empty view to trigger navigation
+                                                } .frame(width: 337, height: 39)
+                                                    .background(Color.orange)
+                                                    .foregroundColor(.white)
+                                                    .clipShape(RoundedRectangle(cornerRadius: 10))
+                                                    .padding(.top,10)
+                                            }
 
-                    } else {
-                        Text("No questions available")
-                            .padding()
-                    }
-                }
-                .navigationTitle("Questions")
-                .navigationBarItems(trailing: Button(action: {
-                    showPopup.toggle()
-                }, label: {
-                    Image(systemName: "plus")
-                }))
-                .sheet(isPresented: $showPopup) {
-                    NewQuestionView()
-                }
-            }
-        }
-        .navigationBarBackButtonHidden(true)
-        .onReceive(timer) { _ in
-            if isTimerRunning {
-                if timeRemaining > 0 {
-                    timeRemaining -= 1
-                } else {
-                    // Timer finished, reset
-                    isTimerRunning = false
-                    timeRemaining = 180  // Reset timer for the next question
-                }
-            }
-        }
+                                
+                                            if  navigateToNextPage {
+                                                                Button(action: {
+                                                                    navigateToNextPage = true
+                                                                }) {
+                                                                    Text("Next")
+                                                                        .frame(width: 337, height: 39)
+                                                                        .background(Color.orange)
+                                                                        .foregroundColor(.white)
+                                                                        .clipShape(RoundedRectangle(cornerRadius: 10))
+                                                                }
+                                                            }
+                                
+                                
+                                            
+                                            
+                                        }
+                                        
+                                    } else {
+                                        Text("No questions available")
+                                            .padding()
+                                    }
+                                }
+                                .navigationTitle("Questions")
+
+                                .navigationBarItems(trailing: Button(action: {
+                                           showPopup.toggle()
+                                       }, label: {
+                                           Image(systemName: "plus")
+                                       }))
+                                       .sheet(isPresented: $showPopup) {
+                                           NewQuestionView()
+                                       }
+                                   }
+                               }.navigationBarBackButtonHidden(true)
+                                       .onAppear {
+                                                   startTimer()
+                                               }
+                               .onReceive(timer) { _ in
+                                   if isTimerRunning {
+                                       if timeRemaining > 0 {
+                                           timeRemaining -= 1
+                                       } else {
+                                           // Timer finished, reset
+                                           isTimerRunning = false
+                                           timeRemaining = 180  // Reset timer for the next question
+                                           navigateToNextPage = true
+                                       }
+                                   }
+                               }
+
         .environmentObject(DataManager())
     }
 
@@ -512,20 +647,24 @@ struct session_AnsQuestions: View {
 
 struct session_Crazy8: View
 {
-    var likedWords: [String]
+  //  var likedWords: [String]
 @State private var isSummaryPresented = false
 
 //@State private var text: String = ""
 @State private var savedTexts: [String] = []
 @State private var isShowingSavedTexts = false
-@State private var timeRemaining = 1 * 6 // 8 minutes in seconds
+@State private var timeRemaining = 60 // 8 minutes in seconds
 @State private var timerActive = false
 @State private var timerNotActive = false
 @State private var hasStartedTimer = false // Tracks if the timer has started
 @State private var vibrationTimer: Timer? // Timer for continuous vibration
 //
+    @State private var isTimerRunning = false
 
-let totalDuration = 1 * 6 // Total duration in seconds for progress calculation
+    @Binding var THEFAVORITEONE: String
+    @State private var navigateToNextPage = false
+
+let totalDuration = 1 * 60 // Total duration in seconds for progress calculation
 let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
 
 //@Environment(\.managedObjectContext) private var viewContext
@@ -533,7 +672,7 @@ var items: [DataItem]
 var sessionName: String  // This should hold the value across this view's lifecycle
 @Environment(\.modelContext) private var context
 var userInputs: [String]
-//var checkedInput: String
+var checkedInput: String
 var displayedQuestion: String
 @State private var problemStatement: String = ""
 @State private var navigatehome: Bool = false // Track if session started
@@ -542,7 +681,7 @@ var displayedQuestion: String
 
 @State private var text: String = ""
 // @State private var savedTexts: [String] = []
-    var selectedWord: String
+ //   var selectedWord: String
 var body: some View {
     NavigationView {
         ZStack {
@@ -675,9 +814,9 @@ var body: some View {
 
                 }
                 
-                // مفروض نوحد جملتهم 
-                Text("Entered Value: \(enteredValueForSelectedWord())")
-                Text("Selected Word: \(selectedWord)")
+                // مفروض نوحد جملتهم
+//                Text("Entered Value: \(enteredValueForSelectedWord())")
+//                Text("Selected Word: \(selectedWord)")
                                .font(.largeTitle)
                                .padding()
 
@@ -685,8 +824,10 @@ var body: some View {
                 Text("Session: \(sessionName)")  // Debugging display
                     .onAppear {
                         print("Session Name on Appear in TheNextPage: \(sessionName)")
+                        startTimer()
+
                     }
-                Text("Generate an ideas for solving a problem ")
+                Text("Generate an ideas for solving a problem \(THEFAVORITEONE)")
                     .font(.caption)
                     .foregroundColor(.gray)
                 TextField("Enter problem statement", text: $problemStatement)
@@ -713,12 +854,12 @@ var body: some View {
     }.navigationBarBackButtonHidden(true)
 }
 
-    func enteredValueForSelectedWord() -> String {
-         if let index = likedWords.firstIndex(of: selectedWord) {
-             return userInputs[index]
-         }
-         return ""
-     }
+//    func enteredValueForSelectedWord() -> String {
+//         if let index = likedWords.firstIndex(of: selectedWord) {
+//             return userInputs[index]
+//         }
+//         return ""
+//     }
 private func startVibrationTimer() {
 vibrationTimer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { _ in
     HapticsManager1.shared.triggerHapticFeedback(style: .heavy)
@@ -755,7 +896,22 @@ func saveSession() {
     print("navigatehome set to true")
 }
 
-
+    func startTimerIfNeeded() {
+         if !isTimerRunning {
+             isTimerRunning = true
+     //        timeRemaining = 6
+         }
+     }
+          
+          
+          func startTimer() {
+              Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
+                  timeRemaining -= 1
+                  if timeRemaining == 0 {
+                      navigateToNextPage = true
+                  }
+              }
+          }
 
 
 
@@ -801,15 +957,17 @@ var sessionName: String  // This should hold the value across this view's lifecy
 
 @Environment(\.presentationMode) var presentationMode // Environment to control the view presentation
 var userInputs: [String]
-//var checkedInput: String
+var checkedInput: String
 var displayedQuestion: String
-    var selectedWord: String
+   // var selectedWord: String
 @State private var statement = ""
 @State public var answer1 : String = ""
 @State public var Answer2 : String = ""
 @State public var Answer3 : String = ""
 
-    var likedWords: [String]
+//    var likedWords: [String]
+    @Binding var THEFAVORITEONE: String
+
 var body: some View {
     NavigationStack{
         ZStack{
@@ -831,10 +989,10 @@ var body: some View {
                 }.offset(x:0,y: -100)
                  
                 // مفروض نوحد جملتهم
-                Text("Entered Value: \(enteredValueForSelectedWord())")
-                               .font(.largeTitle)
-                               .padding()
-                Text("Selected Word: \(selectedWord)")
+//                Text("Entered Value: \(enteredValueForSelectedWord())")
+//                               .font(.largeTitle)
+//                               .padding()
+//                Text("Selected Word: \(selectedWord)")
                 NavigationLink(destination: ReversAnswers(statement: statement, answer1: $answer1 , answer2: $Answer2 , answer3: $Answer3, items: items, sessionName: sessionName)) {
                                        ZStack{
                                            Rectangle()
@@ -845,7 +1003,9 @@ var body: some View {
                                                .foregroundColor(.white)
                                        }
                                    }
-        Text("How can you make it worse ?")
+                
+                             Text("How can we make \(THEFAVORITEONE) worse ?")
+
                     .padding(.trailing , 100)
                 
                 ZStack{
@@ -904,12 +1064,12 @@ var body: some View {
     }.navigationBarBackButtonHidden(true)
 }
     
-    func enteredValueForSelectedWord() -> String {
-         if let index = likedWords.firstIndex(of: selectedWord) {
-             return userInputs[index]
-         }
-         return ""
-     }
+//    func enteredValueForSelectedWord() -> String {
+//         if let index = likedWords.firstIndex(of: selectedWord) {
+//             return userInputs[index]
+//         }
+//         return ""
+//     }
     private func isNextButtonEnabled() -> Bool {
         return !statement.isEmpty && !answer1.isEmpty && !Answer2.isEmpty && !Answer3.isEmpty
     }
