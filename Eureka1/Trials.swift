@@ -391,165 +391,177 @@ generator.impactOccurred()
 
 
 
-
 struct try_AnsQuestions: View {
-@EnvironmentObject var dataManager: DataManager
-@State private var showPopup = false
-@State private var currentIndex = 0
-@State private var userInputs = ["", "", ""]
-@State private var checkedIndex: Int? = nil  // Optional Int to keep track of which checkbox is checked
+    @EnvironmentObject var dataManager: DataManager
+    @State private var showPopup = false
+    @State private var currentIndex = 0
+    @State private var userInputs = ["", "", ""]
+    @State private var checkedIndex: Int? = nil  // Optional Int to keep track of which checkbox is checked
 
-@State private var isTimerRunning = false
-@State private var timeRemaining = 90  // 3 minutes in seconds
+    @State private var isTimerRunning = false
+    @State private var timeRemaining = 90  // 3 minutes in seconds
 
-var body: some View {
-NavigationView {
-    ZStack {
-        Color.gray1
-            .ignoresSafeArea()
-        
-        Image("backgrund")
-            .resizable()
-            .frame(width: 400 , height: 170)
-            .padding(.bottom,820)
-        
-        Text("Answer the Question")
-            .font(.title)
-            .bold()
-            .foregroundColor(.white)
-            .padding(.trailing , 100)
-            .padding(.bottom , 710)
-      
-        VStack {
-            Text(formattedTime(timeRemaining))
-                .font(.system(size: 60, weight: .bold))
-                .padding(.bottom, 20)
-            
-            if !dataManager.questions.isEmpty {
-                Text(dataManager.questions[currentIndex].text)
-                   
-                    .font(.largeTitle)
-                    .padding(.bottom, 10)
+    var body: some View {
+        NavigationView {
+            ZStack {
+                Color.gray1
+                    .ignoresSafeArea()
                 
-                Button("New Question >>") {
-                    // Generate a new index and clear the text fields and checkbox
-                    currentIndex = generateRandomIndex(excluding: currentIndex)
-                    userInputs = ["", "", ""]
-                    checkedIndex = nil
-                }
-                .padding(.bottom, 10)
-                .foregroundColor(.orange1)
+                Image("backgrund")
+                    .resizable()
+                    .frame(width: 400 , height: 170)
+                    .padding(.bottom,820)
                 
+                Text("Answer the Question")
+                    .font(.title)
+                    .bold()
+                    .foregroundColor(.white)
+                    .padding(.trailing , 100)
+                    .padding(.bottom , 710)
+              
                 VStack {
-                    ForEach(0..<3, id: \.self) { index in
-                        HStack {
-                            if !userInputs[index].isEmpty {
-                                Image(systemName: checkedIndex == index ? "checkmark.circle" : "circle")
-                                    .resizable()
-                                    .foregroundColor(.button)
-                                    .frame(width: 22, height: 22)
-                                    .padding(.trailing , 20)
-                                    .onTapGesture {
-                                        if checkedIndex == index {
-                                            checkedIndex = nil  // Uncheck if already checked
-                                        } else {
-                                            checkedIndex = index  // Check new index
-                                        }
+                    Text(formattedTime(timeRemaining))
+                        .font(.system(size: 60, weight: .bold))
+                        .padding(.bottom, 20)
+                    
+                    if !dataManager.questions.isEmpty {
+                        Text(dataManager.questions[currentIndex].text)
+                           
+                            .font(.largeTitle)
+                            .padding(.bottom, 10)
+                        
+                        Button("New Question >>") {
+                            // Generate a new index and clear the text fields and checkbox
+                            currentIndex = generateRandomIndex(excluding: currentIndex)
+                            userInputs = ["", "", ""]
+                            checkedIndex = nil
+                        }
+                        .padding(.bottom, 10)
+                        .foregroundColor(.orange1)
+                        
+                        VStack {
+                            ForEach(0..<3, id: \.self) { index in
+                                HStack {
+                                    if !userInputs[index].isEmpty {
+                                        Image(systemName: checkedIndex == index ? "checkmark.circle" : "circle")
+                                            .resizable()
+                                            .foregroundColor(.button)
+                                            .frame(width: 22, height: 22)
+                                            .padding(.trailing , 20)
+                                            .onTapGesture {
+                                                if checkedIndex == index {
+                                                    checkedIndex = nil  // Uncheck if already checked
+                                                } else {
+                                                    checkedIndex = index  // Check new index
+                                                }
+                                            }
                                     }
+                                    
+                                    TextField("Type something...", text: $userInputs[index], onEditingChanged: { editing in
+                                        if editing && !isTimerRunning {
+                                            startTimer()
+                                        }
+                                    })
+                                    .foregroundColor(.black)
+                                    .accentColor(.black)
+                                    .frame(maxWidth: .infinity)
+                                    .frame(height: 45)
+                                    .background(Color.white)
+                                    .overlay(
+                                  RoundedRectangle(cornerRadius: 5)
+                                 .stroke(Color.white, lineWidth: 2)
+                                                  )
+                                   
+                                } .padding(.leading , 20)
+                                    .padding(.trailing , 15)
+                                    .padding(.bottom , 30)
                             }
+                        }.padding(.bottom, 80)
+                        VStack {
+                            Text("* check mark the one that resonates with you the most.")
+                                .foregroundColor(.gray)
+                                .frame(alignment: .center)
+                                .font(.system(size: 12))
                             
-                            TextField("Type something...", text: $userInputs[index], onEditingChanged: { editing in
-                                if editing && !isTimerRunning {
-                                    startTimer()
+                            NavigationLink(
+                                destination: AnsQuestions_Summ(texts: [""], userInputs: userInputs, checkedInput: userInputs[checkedIndex ?? 0], displayedQuestion: dataManager.questions[currentIndex].text),
+                                isActive: .constant(false), // Disable default navigation
+                                label: {
+                                    Text("Next")
+                                        .frame(width: 337, height: 39)
+                                        .background(nextButtonEnabled ? Color.button : Color.gray)
+                                        .foregroundColor(.white)
+                                        .clipShape(RoundedRectangle(cornerRadius: 5))
+                                }
+                            )
+                            .simultaneousGesture(TapGesture().onEnded {
+                                if nextButtonEnabled {
+                                    // Perform the navigation
+                                    NavigationLink(destination: AnsQuestions_Summ(texts: [""], userInputs: userInputs, checkedInput: userInputs[checkedIndex ?? 0], displayedQuestion: dataManager.questions[currentIndex].text)) {
+                                        EmptyView()
+                                    }
                                 }
                             })
-                            .foregroundColor(.black)
-                            .accentColor(.black)
-                            .frame(maxWidth: .infinity)
-                            .frame(height: 45)
-                            .background(Color.white)
-                            .overlay(
-                          RoundedRectangle(cornerRadius: 5)
-                         .stroke(Color.white, lineWidth: 2)
-                                          )
-                           
-                        } .padding(.leading , 20)
-                            .padding(.trailing , 15)
-                            .padding(.bottom , 30)
+                            .disabled(!nextButtonEnabled) // Disable button when conditions are not met
+                            .padding(.bottom, 20)
+                        }
+                        
+                    } else {
+                        Text("No questions available")
+                            .padding()
                     }
-                }.padding(.bottom, 80)
-                VStack {
-                    Text("* check mark the one that resonates with you the most.")
-                        .foregroundColor(.gray)
-                        .frame(alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
-                        .font(.system(size: 12))
-                    
-                    
-                    
-                    NavigationLink(
-                            destination: AnsQuestions_Summ(texts: [""], userInputs: userInputs, checkedInput: userInputs[checkedIndex ?? 0], displayedQuestion: dataManager.questions[currentIndex].text),
-                            isActive: .constant(checkedIndex != nil),
-                            label: {
-                                Text("Next")
-                                    .frame(width: 337, height: 39)
-                                    .background(Color.button)
-                                    .foregroundColor(.white)
-                                    .clipShape(RoundedRectangle(cornerRadius: 5))
-                            }
-                        )
-                        .padding(.bottom, 20)
                 }
-                
-            } else {
-                Text("No questions available")
-                    .padding()
+               // .navigationTitle("Questions")
+                .navigationBarItems(trailing: Button(action: {
+                    showPopup.toggle()
+                }, label: {
+                    Image(systemName: "plus")
+                }))
+                .sheet(isPresented: $showPopup) {
+                   // NewQuestionView()
+                }
+            }
+        }.navigationBarBackButtonHidden(true)
+        .onReceive(timer) { _ in
+            if isTimerRunning {
+                if timeRemaining > 0 {
+                    timeRemaining -= 1
+                } else {
+                    // Timer finished, reset
+                    isTimerRunning = false
+                    timeRemaining = 180  // Reset timer for the next question
+                }
             }
         }
-       // .navigationTitle("Questions")
-        .navigationBarItems(trailing: Button(action: {
-            showPopup.toggle()
-        }, label: {
-            Image(systemName: "plus")
-        }))
-        .sheet(isPresented: $showPopup) {
-           // NewQuestionView()
-        }
+        .environmentObject(DataManager())
     }
-}.navigationBarBackButtonHidden(true)
-.onReceive(timer) { _ in
-    if isTimerRunning {
-        if timeRemaining > 0 {
-            timeRemaining -= 1
-        } else {
-            // Timer finished, reset
-            isTimerRunning = false
-            timeRemaining = 180  // Reset timer for the next question
-        }
+
+    // Computed property to determine if the Next button should be enabled
+    private var nextButtonEnabled: Bool {
+        return !userInputs.contains("") && checkedIndex != nil
+    }
+
+    func generateRandomIndex(excluding currentIndex: Int) -> Int {
+        var newIndex: Int
+        repeat {
+            newIndex = Int.random(in: 0..<dataManager.questions.count)
+        } while newIndex == currentIndex && dataManager.questions.count > 1
+        return newIndex
+    }
+
+    private let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
+
+    private func startTimer() {
+        isTimerRunning = true
+    }
+
+    private func formattedTime(_ seconds: Int) -> String {
+        let minutes = seconds / 60
+        let remainingSeconds = seconds % 60
+        return String(format: "%02d:%02d", minutes, remainingSeconds)
     }
 }
-.environmentObject(DataManager())
-}
 
-func generateRandomIndex(excluding currentIndex: Int) -> Int {
-var newIndex: Int
-repeat {
-    newIndex = Int.random(in: 0..<dataManager.questions.count)
-} while newIndex == currentIndex && dataManager.questions.count > 1
-return newIndex
-}
-
-private let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
-
-private func startTimer() {
-isTimerRunning = true
-}
-
-private func formattedTime(_ seconds: Int) -> String {
-let minutes = seconds / 60
-let remainingSeconds = seconds % 60
-return String(format: "%02d:%02d", minutes, remainingSeconds)
-}
-}
 
 struct AnsQuestions_Summ: View {
 @State private var showAllTexts = false
@@ -882,197 +894,188 @@ for (index, word) in likedWords.enumerated() {
 }
 
 
-
 struct try_RandomWords2: View {
-var likedWords: [String]
-@State private var enteredValues: [String]
-@State private var selectedWord: String?
-@State private var showCheckmarks: Bool = false
-@State private var showNextButton: Bool = false
-@State private var navigateToSummary: Bool = false
-@State private var isTimerRunning = false
-@State private var timeRemaining = 6
+    var likedWords: [String]
+    @State private var enteredValues: [String]
+    @State private var selectedWord: String?
+    @State private var showCheckmarks: Bool = false
+    @State private var showNextButton: Bool = false
+    @State private var navigateToSummary: Bool = false
+    @State private var isTimerRunning = false
+    @State private var timeRemaining = 6
+    @State private var checkedIndex: Int? = nil  // Optional Int to keep track of which checkbox is checked
 
-init(likedWords: [String]) {
-self.likedWords = likedWords
-self._enteredValues = State(initialValue: Array(repeating: "", count: likedWords.count))
-}
+    @Environment(\.colorScheme) var colorScheme
 
-var isNextStepButtonEnabled: Bool {
-return enteredValues.allSatisfy { !$0.isEmpty }
-}
+    init(likedWords: [String]) {
+        self.likedWords = likedWords
+        self._enteredValues = State(initialValue: Array(repeating: "", count: likedWords.count))
+    }
 
-@State private var checkedIndex: Int? = nil  // Optional Int to keep track of which checkbox is checked
-    
-@Environment(\.colorScheme) var colorScheme
-    
-var body: some View {
-NavigationView {
-    ZStack {
-        Color.gray1
-            .ignoresSafeArea()
-        
-        Image("backgrund")
-            .resizable()
-            .frame(width: 400 , height: 150)
-            .padding(.bottom,750)
-        
-        Spacer()
-        ScrollView {
-          
-            VStack {
-                Text("Random Word")
-                    .font(.system(size: 29, weight: .semibold))
-                    .padding(.top, 95)
-                    .padding(.trailing, 170)
-                    .foregroundColor(colorScheme == .dark ? .black : .white)
-                
-                
-                Text(timerString)
-                    .font(.system(size: 60, weight: .bold))
-                    .padding(.top, 25)
-                    .padding(.bottom, 20)
-                
-                Text("Place these words into possible ideas or solutions:")
-                    .font(.system(size: 17, weight: .medium))
-                    .padding(.bottom, 30)
-                    .padding(.trailing , 50)
-                
-                VStack {
-                    ForEach(0..<likedWords.count, id: \.self) { index in
+    var isNextStepButtonEnabled: Bool {
+        return enteredValues.allSatisfy { !$0.isEmpty } && checkedIndex != nil
+    }
+
+    var isNextButtonEnabled: Bool {
+        return selectedWord != nil
+    }
+
+    var body: some View {
+        NavigationView {
+            ZStack {
+                Color.gray1
+                    .ignoresSafeArea()
+
+                Image("backgrund")
+                    .resizable()
+                    .frame(width: 400, height: 150)
+                    .padding(.bottom, 750)
+
+                Spacer()
+                ScrollView {
+                    VStack {
+                        Text("Random Word")
+                            .font(.system(size: 29, weight: .semibold))
+                            .padding(.top, 95)
+                            .padding(.trailing, 170)
+                            .foregroundColor(colorScheme == .dark ? .black : .white)
+
+                        Text(timerString)
+                            .font(.system(size: 60, weight: .bold))
+                            .padding(.top, 25)
+                            .padding(.bottom, 20)
+
+                        Text("Place these words into possible ideas or solutions:")
+                            .font(.system(size: 17, weight: .medium))
+                            .padding(.bottom, 30)
+                            .padding(.trailing, 50)
+
                         VStack {
-                            HStack {
-                                Text("First word:")
-                                    .font(.system(size: 15))
-                                    .padding(.bottom, 10)
-                                    .padding(.leading ,-160 )
-                                Text(likedWords[index])
-                                    .font(.system(size: 15))
-                                    .padding(.bottom, 10)
-                                    .padding(.leading ,-90 )
-                            }.padding(.leading, 50)
-                            .foregroundColor(.gray)
-                            TextField("Enter The Sentnce", text: $enteredValues[index])
-                                .padding()
-                                .frame(width: 300, height: 40)
-                                .background(
-                                    RoundedRectangle(cornerRadius: 10)
-                                        .foregroundColor(Color.white)
-                                        .shadow(radius: 3)
-                              
-                                ).padding(.bottom, 25)
-                                .padding(.leading , 15)
-.overlay(
-                
-                
-                
+                            ForEach(0..<likedWords.count, id: \.self) { index in
+                                VStack {
+                                    HStack {
+                                        Text("First word:")
+                                            .font(.system(size: 15))
+                                            .padding(.bottom, 10)
+                                            .padding(.leading, -160)
+                                        Text(likedWords[index])
+                                            .font(.system(size: 15))
+                                            .padding(.bottom, 10)
+                                            .padding(.leading, -90)
+                                    }
+                                    .padding(.leading, 50)
+                                    .foregroundColor(.gray)
 
-                  Image(systemName: checkedIndex == index ? "checkmark.circle.fill" : "circle")
-                      .resizable()
-                      .foregroundColor(checkedIndex == index ? Color.button : Color.gray)
-                      .frame(width: 22, height: 22)
-                      .padding(.trailing , 350)
-                      .onTapGesture {
-                          
-                          
-                          
-                          
-                          
-                          if checkedIndex == index {
-                              checkedIndex = nil  // Uncheck if already checked
-                            
-                          } else {
-                              checkedIndex = index  // Check new index
-                             
-                              
-                          }
-                      }
-
-                    )
-                            
-                        }.frame(maxWidth: .infinity)
-                        
-                    }
-                    Button(action: {
-                        showCheckmarks = true
-                    }) {
-                        Text("Next Step")
-                            .frame(width: 337, height: 39)
-                            .background(isNextStepButtonEnabled ? Color.orange : Color.gray)
-                            .foregroundColor(.white)
-                            .clipShape(RoundedRectangle(cornerRadius: 10))
-                            .font(.system(size: 20, weight: .bold))
-                            .opacity(isNextStepButtonEnabled ? 1.0 : 0.5)
-                            .disabled(!isNextStepButtonEnabled)
-                            
-                    }
-                }
-              
-                if showCheckmarks {
-                    Text("Place these words into possible ideas or solutions:")
-                        .font(.system(size: 20, weight: .semibold))
-                    
-                    ForEach(likedWords, id: \.self) { word in
-                        HStack {
-                            Image(systemName: selectedWord == word ? "checkmark.square.fill" : "square")
-                                .resizable()
-                                .frame(width: 20, height: 20)
-                                .foregroundColor(.blue)
-                                .onTapGesture {
-                                    selectedWord = word
-                                    showNextButton = true
+                                    TextField("Enter The Sentence", text: $enteredValues[index])
+                                        .padding()
+                                        .frame(width: 300, height: 40)
+                                        .background(
+                                            RoundedRectangle(cornerRadius: 10)
+                                                .foregroundColor(Color.white)
+                                                .shadow(radius: 3)
+                                        )
+                                        .padding(.bottom, 25)
+                                        .padding(.leading, 15)
+                                        .overlay(
+                                            Image(systemName: checkedIndex == index ? "checkmark.circle.fill" : "circle")
+                                                .resizable()
+                                                .foregroundColor(checkedIndex == index ? Color.button : Color.gray)
+                                                .frame(width: 22, height: 22)
+                                                .padding(.trailing, 350)
+                                                .onTapGesture {
+                                                    if checkedIndex == index {
+                                                        checkedIndex = nil  // Uncheck if already checked
+                                                    } else {
+                                                        checkedIndex = index  // Check new index
+                                                    }
+                                                }
+                                        )
                                 }
-                            
-                            Text(word)
-                                .font(.system(size: 18))
+                                .frame(maxWidth: .infinity)
+                            }
 
+                            Button(action: {
+                                showCheckmarks = true
+                            }) {
+                                Text("Next Step")
+                                    .frame(width: 337, height: 39)
+                                    .background(isNextStepButtonEnabled ? Color.orange : Color.gray)
+                                    .foregroundColor(.white)
+                                    .clipShape(RoundedRectangle(cornerRadius: 10))
+                                    .font(.system(size: 20, weight: .bold))
+                                    .opacity(isNextStepButtonEnabled ? 1.0 : 0.5)
+                            }
+                            .disabled(!isNextStepButtonEnabled)
+                        }
+
+                        if showCheckmarks {
+                            Text("Place these words into possible ideas or solutions:")
+                                .font(.system(size: 20, weight: .semibold))
+
+                            ForEach(likedWords, id: \.self) { word in
+                                HStack {
+                                    Image(systemName: selectedWord == word ? "checkmark.square.fill" : "square")
+                                        .resizable()
+                                        .frame(width: 20, height: 20)
+                                        .foregroundColor(.blue)
+                                        .onTapGesture {
+                                            selectedWord = word
+                                            showNextButton = true
+                                        }
+
+                                    Text(word)
+                                        .font(.system(size: 18))
+                                }
+                            }
+                            Button(action: {
+                                navigateToSummary = true
+                            }) {
+                                Text("Next")
+                                    .font(.system(size: 20, weight: .bold))
+                                    .padding()
+                                    .foregroundColor(.white)
+                                    .background(isNextButtonEnabled ? Color.orange : Color.gray)
+                                    .cornerRadius(10)
+                                    .opacity(isNextButtonEnabled ? 1.0 : 0.5)
+                            }
+                            .disabled(!isNextButtonEnabled)
+                        }
+
+                        NavigationLink(
+                            destination: RWSummary(
+                                texts: [""],
+                                selectedWord: selectedWord,
+                                enteredValue: enteredValues[likedWords.firstIndex(of: selectedWord ?? "") ?? 0]
+                            ),
+                            isActive: $navigateToSummary
+                        ) {
+                            EmptyView()
                         }
                     }
-                    Button(action: {
-                        navigateToSummary = true
-                    }) {
-                        Text("Next")
-                            .font(.system(size: 20, weight: .bold))
-                            .padding()
-                            .foregroundColor(.white)
-                            .background(showNextButton ? Color.blue : Color.gray)
-                            .cornerRadius(10)
-                            .opacity(showNextButton ? 1.0 : 0.5)
-                            .disabled(!showNextButton)
                 }
-                }
-                
-                NavigationLink(
-                    destination: RWSummary( texts: [""], selectedWord: selectedWord, enteredValue: enteredValues[likedWords.firstIndex(of: selectedWord ?? "") ?? 0]),
-                    isActive: $navigateToSummary
-                ) {
-                    EmptyView()
-                }
-                
             }
         }
+        .navigationBarBackButtonHidden(true)
     }
-}.navigationBarBackButtonHidden(true)
-}
-var timerString: String {
-let minutes = timeRemaining / 6
-let seconds = timeRemaining % 6
 
-if minutes < 10 {
-    return String(format: "%d:%02d", minutes, seconds)
-} else {
-    return String(format: "%02d:%02d", minutes, seconds)
-}
-}
+    var timerString: String {
+        let minutes = timeRemaining / 6
+        let seconds = timeRemaining % 6
 
-func startTimerIfNeeded() {
-if !isTimerRunning {
-    isTimerRunning = true
-    timeRemaining = 6
-}
-}
-}
+        if minutes < 10 {
+            return String(format: "%d:%02d", minutes, seconds)
+        } else {
+            return String(format: "%02d:%02d", minutes, seconds)
+        }
+    }
 
+    func startTimerIfNeeded() {
+        if !isTimerRunning {
+            isTimerRunning = true
+            timeRemaining = 6
+        }
+    }
+}
 
 struct try_RandomWords2_Previews: PreviewProvider {
     static var previews: some View {
@@ -1082,40 +1085,36 @@ struct try_RandomWords2_Previews: PreviewProvider {
     }
 }
 
-
 struct CardView1: View {
-var word: String
+    var word: String
     @Environment(\.colorScheme) var colorScheme
-var body: some View {
-Text(word)
-    .font(.largeTitle)
-    .frame(width: 300, height: 280)
-    .background(Color.white1)
-    .cornerRadius(10)
-.shadow(color: colorScheme == .dark ? Color.white.opacity(0.02) : Color.gray.opacity(0.5), radius: 5, x: 0, y: 2)
-.foregroundColor(colorScheme == .dark ? .white : .black)
-
-//    .overlay(
-//        RoundedRectangle(cornerRadius: 10).stroke(Color.gray, lineWidth: 1)
-//    )
-}
+    var body: some View {
+        Text(word)
+            .font(.largeTitle)
+            .frame(width: 300, height: 280)
+            .background(Color.white1)
+            .cornerRadius(10)
+            .shadow(color: colorScheme == .dark ? Color.white.opacity(0.02) : Color.gray.opacity(0.5), radius: 5, x: 0, y: 2)
+            .foregroundColor(colorScheme == .dark ? .white : .black)
+    }
 }
 
 struct LikedWordBox: View {
-var word: String
+    var word: String
     @Environment(\.colorScheme) var colorScheme
-var body: some View {
-    RoundedRectangle(cornerRadius: 10)
-        .stroke(colorScheme == .dark ? .gray : .white, lineWidth: 1) // Orange border
-        .frame(width: 100, height: 50)
-        .background(.white1) // White background
-       // .shadow(radius: 0.5)
-        .overlay(
-            Text(word)
-                .foregroundColor(colorScheme == .dark ? .white : .black) // Text color
-        )
+    var body: some View {
+        RoundedRectangle(cornerRadius: 10)
+            .stroke(colorScheme == .dark ? .gray : .white, lineWidth: 1)
+            .frame(width: 100, height: 50)
+            .background(Color.white1)
+            .overlay(
+                Text(word)
+                    .foregroundColor(colorScheme == .dark ? .white : .black)
+            )
+    }
 }
-}
+
+
 struct RWSummary: View {
 @State private var showAllTexts = false
 @State private var additionalTexts: [String] = []
@@ -1260,438 +1259,355 @@ NavigationStack{
 }
 
 struct try_ReverseBrainstorming: View {
-    
-    
     struct TopLeadingTextFieldStyle: TextFieldStyle {
         func _body(configuration: TextField<Self._Label>) -> some View {
             configuration
                 .multilineTextAlignment(.leading)
                 .padding(.leading) // Push text to the left
-                .padding(.bottom , 40) // Push text to the top
+                .padding(.bottom, 40) // Push text to the top
         }
     }
-    
-    
+
     @State private var statement = ""
-    @State public var answer1 : String = ""
-    @State public var Answer2 : String = ""
-    @State public var Answer3 : String = ""
-    
+    @State public var answer1: String = ""
+    @State public var Answer2: String = ""
+    @State public var Answer3: String = ""
+
     var body: some View {
-        NavigationStack{
-            ZStack{
-                Color.gray1
-                ZStack{
-                    
-                    VStack{
-                        ZStack{
-                            Image("backgrund")
-                                .resizable()
-                            
-                                .overlay(
-                                    
-                                    Text("Revers Brainstorming")
-                                        .font(.title2)
-                                        .bold()
-                                        .foregroundColor(.white)
-                                        .padding(.trailing , 120)
-                                        .padding(.top ,70)
-                                )
-                                .frame(width: 400 , height: 150)
-                            
-                            
-                        }
-                        
-                        VStack{
-                            
-                            Text("Enter your problem statements :")
-                                .padding(.trailing , 100)
-                            
-                            ZStack(alignment: .topLeading) {
-                                TextField("Problem statements", text: $statement)
-                                    .frame(maxWidth: .infinity)
-                                    .frame(height: 100)
-                                    .background(Color.white)
-                                    .overlay(
-                                        
-                                        RoundedRectangle(cornerRadius: 5)
-                                            .stroke(Color.white, lineWidth: 2)
-                                        
-                                    )
-                                    .textFieldStyle(TopLeadingTextFieldStyle())
-                                    .padding()
-                                    .onSubmit {
-                                        print(statement)
-                                    }
-                                
-                                
-                            }
-                            Text("How can you make it worse ?")
-                                .padding(.trailing , 100)
-                            
-                            ZStack{
-                                Rectangle()
-                                    .frame(width: 343 , height: 82)
-                                    .cornerRadius(10)
-                                    .foregroundColor(.orange2)
-                                ZStack(alignment: .topLeading) {
-                                    TextField("name", text: $answer1)
-                                    
-                                        .frame(width: 322,height: 63)
-                                        .background(Color.white)
-                                        .overlay(
-                                            
-                                            RoundedRectangle(cornerRadius: 5)
-                                                .stroke(Color.white, lineWidth: 2)
-                                            
-                                        )
-                                        .textFieldStyle(TopLeadingTextFieldStyle())
-                                        .padding()
-                                        .onSubmit {
-                                            
-                                        }
-                                }
-                            }
-                        }.padding(.top , 40)
-                        ZStack{
-                            Rectangle()
-                                .frame(width: 343 , height: 82)
-                                .cornerRadius(10)
-                                .foregroundColor(.orange3)
-                            ZStack(alignment: .topLeading) {
-                                TextField("name", text: $Answer2)
-                                
-                                    .frame(width: 322,height: 63)
-                                    .background(Color.white)
-                                    .overlay(
-                                        
-                                        RoundedRectangle(cornerRadius: 5)
-                                            .stroke(Color.white, lineWidth: 2)
-                                        
-                                    )
-                                    .textFieldStyle(TopLeadingTextFieldStyle())
-                                    .padding()
-                                    .onSubmit {
-                                        
-                                    }
-                            }
-                            
-                        }
-                        ZStack{
-                            Rectangle()
-                                .frame(width: 343 , height: 82)
-                                .cornerRadius(10)
-                                .foregroundColor(.orange4)
-                            ZStack(alignment: .topLeading) {
-                                TextField("name", text: $Answer3)
-                                
-                                    .frame(width: 322,height: 63)
-                                    .background(Color.white)
-                                    .overlay(
-                                        
-                                        RoundedRectangle(cornerRadius: 5)
-                                            .stroke(Color.white, lineWidth: 2)
-                                        
-                                    )
-                                    .textFieldStyle(TopLeadingTextFieldStyle())
-                                    .padding()
-                                    .onSubmit {
-                                        
-                                    }
-                            }
-                            
-                        }
-                        
-                        NavigationLink(destination: ReversAnswers( statement: statement, answer1: $answer1 , answer2: $Answer2 , answer3: $Answer3)) {
-                            ZStack{
-                                Rectangle()
-                                    .frame(width: 337 , height: 39)
-                                    .cornerRadius(5)
-                                    .foregroundColor(.laitOrange)
-                                Text("Next")
+        NavigationStack {
+            ZStack {
+                Color.gray1.ignoresSafeArea()
+                VStack {
+                    ZStack {
+                        Image("backgrund")
+                            .resizable()
+                            .overlay(
+                                Text("Revers Brainstorming")
+                                    .font(.title2)
+                                    .bold()
                                     .foregroundColor(.white)
-                            }.padding(.top , 50)
-                        }
-                        
-                        
+                                    .padding(.trailing, 120)
+                                    .padding(.top, 70)
+                            )
+                            .frame(width: 400, height: 150)
                     }
-                }.padding(.bottom , 110)
+
+                    VStack {
+                        Text("Enter your problem statements:")
+                            .padding(.trailing, 100)
+
+                        ZStack(alignment: .topLeading) {
+                            TextField("Problem statements", text: $statement)
+                                .frame(maxWidth: .infinity)
+                                .frame(height: 100)
+                                .background(Color.white)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 5)
+                                        .stroke(Color.white, lineWidth: 2)
+                                )
+                                .textFieldStyle(TopLeadingTextFieldStyle())
+                                .padding()
+                        }
+
+                        Text("How can you make it worse?")
+                            .padding(.trailing, 100)
+
+                        ZStack {
+                            Rectangle()
+                                .frame(width: 343, height: 82)
+                                .cornerRadius(10)
+                                .foregroundColor(.orange2)
+                            ZStack(alignment: .topLeading) {
+                                TextField("name", text: $answer1)
+                                    .frame(width: 322, height: 63)
+                                    .background(Color.white)
+                                    .overlay(
+                                        RoundedRectangle(cornerRadius: 5)
+                                            .stroke(Color.white, lineWidth: 2)
+                                    )
+                                    .textFieldStyle(TopLeadingTextFieldStyle())
+                                    .padding()
+                            }
+                        }
+                    }
+                    .padding(.top, 40)
+
+                    ZStack {
+                        Rectangle()
+                            .frame(width: 343, height: 82)
+                            .cornerRadius(10)
+                            .foregroundColor(.orange3)
+                        ZStack(alignment: .topLeading) {
+                            TextField("name", text: $Answer2)
+                                .frame(width: 322, height: 63)
+                                .background(Color.white)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 5)
+                                        .stroke(Color.white, lineWidth: 2)
+                                )
+                                .textFieldStyle(TopLeadingTextFieldStyle())
+                                .padding()
+                        }
+                    }
+
+                    ZStack {
+                        Rectangle()
+                            .frame(width: 343, height: 82)
+                            .cornerRadius(10)
+                            .foregroundColor(.orange4)
+                        ZStack(alignment: .topLeading) {
+                            TextField("name", text: $Answer3)
+                                .frame(width: 322, height: 63)
+                                .background(Color.white)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 5)
+                                        .stroke(Color.white, lineWidth: 2)
+                                )
+                                .textFieldStyle(TopLeadingTextFieldStyle())
+                                .padding()
+                        }
+                    }
+
+                    NavigationLink(destination: ReversAnswers(statement: statement, answer1: $answer1, answer2: $Answer2, answer3: $Answer3)) {
+                        ZStack {
+                            Rectangle()
+                                .frame(width: 337, height: 39)
+                                .cornerRadius(5)
+                                .foregroundColor(isNextButtonEnabled() ? .laitOrange : .gray)
+                            Text("Next")
+                                .foregroundColor(.white)
+                        }
+                        .padding(.top, 50)
+                    }
+                    .disabled(!isNextButtonEnabled())
+                }
+                .padding(.bottom, 110)
             }
-            
-        } .navigationBarBackButtonHidden(true)
-    }
-    
-    struct ReversAnswers: View {
-        
-        var statement: String
-        @State public var Answer4 = ""
-        @State public var Answer5 = ""
-        @State public var Answer6 = ""
-        @Binding var answer1 : String
-        @Binding var answer2 : String
-        @Binding var answer3 : String
-        var body: some View {
-            NavigationStack{
-                ZStack{
-                    Color.gray1
-                    ZStack{
-                        
-                        VStack{
-                            ZStack{
-                                Image("backgrund")
-                                    .resizable()
-                                
-                                
-                                    .overlay(
-                                        
-                                        Text("Revers Brainstorming")
-                                            .font(.title2)
-                                            .bold()
-                                            .foregroundColor(.white)
-                                            .padding(.trailing , 120)
-                                            .padding(.top ,70)
-                                    )
-                                    .frame(width: 400 , height: 150)
-                                
-                                
-                            }
-                            
-                            
-                            
-                            
-                            Text("Revers your answers :")
-                                .padding(.trailing , 175)
-                                .padding()
-                            
-                            Text("First Answer : \(answer1)")
-                                .foregroundColor(.gray)
-                                .bold()
-                                .padding(.trailing , 175)
-                                .padding()
-                            
-                            
-                            ZStack(alignment: .topLeading) {
-                                TextField("name", text: $Answer4)
-                                
-                                    .frame(width: 331,height: 58)
-                                    .background(Color.white)
-                                    .overlay(
-                                        
-                                        RoundedRectangle(cornerRadius: 5)
-                                            .stroke(Color.white, lineWidth: 2)
-                                        
-                                    )
-                                    .textFieldStyle(TopLeadingTextFieldStyle())
-                                    .padding()
-                                    .onSubmit {
-                                        
-                                    }
-                            }
-                            
-                            Text("Second Answer:\(answer2)")
-                                .foregroundColor(.gray)
-                                .bold()
-                                .padding(.trailing , 175)
-                                .padding()
-                            
-                            
-                            ZStack(alignment: .topLeading) {
-                                TextField("name", text: $Answer5)
-                                
-                                    .frame(width: 331,height: 58)
-                                    .background(Color.white)
-                                    .overlay(
-                                        
-                                        RoundedRectangle(cornerRadius: 5)
-                                            .stroke(Color.white, lineWidth: 2)
-                                        
-                                    )
-                                    .textFieldStyle(TopLeadingTextFieldStyle())
-                                    .padding()
-                                    .onSubmit {
-                                        
-                                    }
-                            } .padding()
-                            
-                            Text("Third Answer : \(answer3)")
-                                .foregroundColor(.gray)
-                                .bold()
-                                .padding(.trailing , 175)
-                                .padding()
-                            
-                            
-                            ZStack(alignment: .topLeading) {
-                                TextField("name", text: $Answer6)
-                                
-                                    .frame(width: 331,height: 58)
-                                    .background(Color.white)
-                                    .overlay(
-                                        
-                                        RoundedRectangle(cornerRadius: 5)
-                                            .stroke(Color.white, lineWidth: 2)
-                                        
-                                    )
-                                    .textFieldStyle(TopLeadingTextFieldStyle())
-                                    .padding()
-                                    .onSubmit {
-                                        
-                                    }
-                            }
-                            
-                            
-                            NavigationLink(destination: ReversAnswers2(answer4: $Answer4, answer5: $Answer5, answer6: $Answer6)){
-                                ZStack{
-                                    Rectangle()
-                                        .frame(width: 337 , height: 39)
-                                        .cornerRadius(5)
-                                        .foregroundColor(.laitOrange)
-                                    Text("Next")
-                                        .foregroundColor(.white)
-                                } .padding(.top , 50)
-                            }
-                            
-                            
-                        }
-                        
-                    }
-                    .padding(.bottom , 110)
-                }
-            } .navigationBarBackButtonHidden(true)
         }
+        .navigationBarBackButtonHidden(true)
     }
-    
-    
-    struct  ReversAnswers2: View {
-        @State private var statement2 = ""
-        @Binding var answer4 : String
-        @Binding var answer5 : String
-        @Binding var answer6 : String
-        var body: some View {
-            NavigationStack{
-                ZStack{
-                    Color.gray1
-                        .ignoresSafeArea()
-                    ZStack{
-                        
-                        VStack{
-                            
-                            ZStack{
-                                Image("backgrund")
-                                    .resizable()
-                                
-                                
-                                    .overlay(
-                                        
-                                        Text("Revers Brainstorming")
-                                            .font(.title2)
-                                            .bold()
-                                            .foregroundColor(.white)
-                                            .padding(.trailing , 120)
-                                            .padding(.top ,70)
-                                    )
-                                    .frame(width: 400 , height: 150)
-                                
-                                
-                            } .padding(.bottom , 50)
-                            
-                            //                            ZStack(alignment: .topLeading) {
-                            //                                TextField("name", text: $Answer4)
-                            //
-                            //                                    .frame(width: 331,height: 58)
-                            //                                    .background(Color.white)
-                            //                                    .overlay(
-                            //
-                            //                                        RoundedRectangle(cornerRadius: 5)
-                            //                                            .stroke(Color.white, lineWidth: 2)
-                            //
-                            //                                    )
-                            //                                    .textFieldStyle(TopLeadingTextFieldStyle())
-                            //                                            .padding()
-                            //                                    .onSubmit {
-                            //
-                            //                                    }
-                            //                            }
-                            
-                            //                ZStack(alignment: .topLeading){
-                            //
-                            //Text("The Reversed Answers :\(answer4) \(answer5) \(answer6)")
-                            //
-                            //        .frame(width: 336,height: 156)
-                            //                .background(Color.white)
-                            //                .overlay(
-                            //
-                            //                RoundedRectangle(cornerRadius: 5)
-                            //                .stroke(Color.white, lineWidth: 2)
-                            //
-                            //                                    )
-                            //                .textFieldStyle(TopLeadingTextFieldStyle())
-                            //
-                            //                .onSubmit {
-                            //
-                            //                                    }
-                            //                            } .padding()
-                            
-            ZStack(alignment: .topLeading) {
-            Text("The Reversed Answers: \(answer4) \(answer5) \(answer6)")
-                    .padding(.trailing , 90)
-                    .padding(.bottom , 100)
-                    .multilineTextAlignment(.leading) // Align text to the left
-                    .frame(width: 336, height: 156)
-                        .background(Color.white)
-                        .overlay(
-                        RoundedRectangle(cornerRadius: 5)
-                        .stroke(Color.white, lineWidth: 2)
-                                    )
-            }.padding(.bottom , 150)
-                            
-                            
-                            
-                            VStack{
-            Text("How can we combine all the the answers into solution ?")
-                    .multilineTextAlignment(.leading)
-                    .padding(.horizontal)
-                                
-                            }.padding()
-                            .padding(.horizontal)
-                            ZStack(alignment: .topLeading) {
-                                TextField("name", text: $statement2)
-                                
-                                    .frame(width: 331,height: 58)
-                                    .background(Color.white)
-                                    .overlay(
-                                        
-                                        RoundedRectangle(cornerRadius: 5)
-                                            .stroke(Color.white, lineWidth: 2)
-                                        
-                                    )
-                                    .textFieldStyle(TopLeadingTextFieldStyle())
-                                    .padding()
-                                    .onSubmit {
-                                        
-                                    }
-                            } .padding()
-                            
-                            
-                            
-                            
-                            NavigationLink(destination: HomePage()){
-                                ZStack{
-                                    Rectangle()
-                                        .frame(width: 337 , height: 39)
-                                        .cornerRadius(5)
-                                        .foregroundColor(.laitOrange)
-                                    Text("Next")
-                                        .foregroundColor(.white)
-                                }
-                            }.padding(.top , 50)
-                            
-                        }
-                    } .padding(.bottom , 110)
-                }
-            }.navigationBarBackButtonHidden(true)
-        }
+
+    private func isNextButtonEnabled() -> Bool {
+        return !statement.isEmpty && !answer1.isEmpty && !Answer2.isEmpty && !Answer3.isEmpty
     }
 }
+    
+struct ReversAnswers: View {
+    
+    struct TopLeadingTextFieldStyle: TextFieldStyle {
+        func _body(configuration: TextField<Self._Label>) -> some View {
+            configuration
+                .multilineTextAlignment(.leading)
+                .padding(.leading)
+                .padding(.bottom, 40)
+        }
+    }
+
+    var statement: String
+    @State public var Answer4 = ""
+    @State public var Answer5 = ""
+    @State public var Answer6 = ""
+    @Binding var answer1: String
+    @Binding var answer2: String
+    @Binding var answer3: String
+    
+    var body: some View {
+        NavigationStack {
+            ZStack {
+                Color.gray1.ignoresSafeArea()
+                VStack {
+                    ZStack {
+                        Image("backgrund")
+                            .resizable()
+                            .overlay(
+                                Text("Revers Brainstorming")
+                                    .font(.title2)
+                                    .bold()
+                                    .foregroundColor(.white)
+                                    .padding(.trailing, 120)
+                                    .padding(.top, 70)
+                            )
+                            .frame(width: 400, height: 150)
+                    }
+                    
+                    Text("Revers your answers:")
+                        .padding(.trailing, 175)
+                        .padding()
+                    
+                    Text("First Answer: \(answer1)")
+                        .foregroundColor(.gray)
+                        .bold()
+                        .padding(.trailing, 175)
+                        .padding()
+                    
+                    ZStack(alignment: .topLeading) {
+                        TextField("name", text: $Answer4)
+                            .frame(width: 331, height: 58)
+                            .background(Color.white)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 5)
+                                    .stroke(Color.white, lineWidth: 2)
+                            )
+                            .textFieldStyle(TopLeadingTextFieldStyle())
+                            .padding()
+                    }
+                    
+                    Text("Second Answer: \(answer2)")
+                        .foregroundColor(.gray)
+                        .bold()
+                        .padding(.trailing, 175)
+                        .padding()
+                    
+                    ZStack(alignment: .topLeading) {
+                        TextField("name", text: $Answer5)
+                            .frame(width: 331, height: 58)
+                            .background(Color.white)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 5)
+                                    .stroke(Color.white, lineWidth: 2)
+                            )
+                            .textFieldStyle(TopLeadingTextFieldStyle())
+                            .padding()
+                    }
+                    .padding()
+                    
+                    Text("Third Answer: \(answer3)")
+                        .foregroundColor(.gray)
+                        .bold()
+                        .padding(.trailing, 175)
+                        .padding()
+                    
+                    ZStack(alignment: .topLeading) {
+                        TextField("name", text: $Answer6)
+                            .frame(width: 331, height: 58)
+                            .background(Color.white)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 5)
+                                    .stroke(Color.white, lineWidth: 2)
+                            )
+                            .textFieldStyle(TopLeadingTextFieldStyle())
+                            .padding()
+                    }
+                    
+                    NavigationLink(destination: ReversAnswers2(answer4: $Answer4, answer5: $Answer5, answer6: $Answer6)) {
+                        ZStack {
+                            Rectangle()
+                                .frame(width: 337, height: 39)
+                                .cornerRadius(5)
+                                .foregroundColor(isNextButtonEnabled() ? .laitOrange : .gray)
+                            Text("Next")
+                                .foregroundColor(.white)
+                        }
+                        .padding(.top, 50)
+                    }
+                    .disabled(!isNextButtonEnabled())
+                }
+                .padding(.bottom, 110)
+            }
+        }
+        .navigationBarBackButtonHidden(true)
+    }
+    
+    private func isNextButtonEnabled() -> Bool {
+        return !Answer4.isEmpty && !Answer5.isEmpty && !Answer6.isEmpty
+    }
+}
+    
+    
+struct ReversAnswers2: View {
+    struct TopLeadingTextFieldStyle: TextFieldStyle {
+        func _body(configuration: TextField<Self._Label>) -> some View {
+            configuration
+                .multilineTextAlignment(.leading)
+                .padding(.leading)
+                .padding(.bottom, 40)
+        }
+    }
+    
+    @State private var statement2 = ""
+    @Binding var answer4: String
+    @Binding var answer5: String
+    @Binding var answer6: String
+    
+    var body: some View {
+        NavigationStack {
+            ZStack {
+                Color.gray1.ignoresSafeArea()
+                VStack {
+                    ZStack {
+                        Image("backgrund")
+                            .resizable()
+                            .overlay(
+                                Text("Revers Brainstorming")
+                                    .font(.title2)
+                                    .bold()
+                                    .foregroundColor(.white)
+                                    .padding(.trailing, 120)
+                                    .padding(.top, 70)
+                            )
+                            .frame(width: 400, height: 150)
+                    }
+                    .padding(.bottom, 50)
+                    
+                    ZStack(alignment: .topLeading) {
+                        Text("The Reversed Answers: \(answer4) \(answer5) \(answer6)")
+                            .padding(.trailing, 90)
+                            .padding(.bottom, 100)
+                            .multilineTextAlignment(.leading)
+                            .frame(width: 336, height: 156)
+                            .background(Color.white)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 5)
+                                    .stroke(Color.white, lineWidth: 2)
+                            )
+                    }
+                    .padding(.bottom, 150)
+                    
+                    VStack {
+                        Text("How can we combine all the answers into a solution?")
+                            .multilineTextAlignment(.leading)
+                            .padding(.horizontal)
+                    }
+                    .padding()
+                    .padding(.horizontal)
+                    
+                    ZStack(alignment: .topLeading) {
+                        TextField("name", text: $statement2)
+                            .frame(width: 331, height: 58)
+                            .background(Color.white)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 5)
+                                    .stroke(Color.white, lineWidth: 2)
+                            )
+                            .textFieldStyle(TopLeadingTextFieldStyle())
+                            .padding()
+                    }
+                    .padding()
+                    
+                    NavigationLink(destination: ReverseBSum(texts: [""],statement2:statement2 )) {
+                        ZStack {
+                            Rectangle()
+                                .frame(width: 337, height: 39)
+                                .cornerRadius(5)
+                                .foregroundColor(isNextButtonEnabled() ? .laitOrange : .gray)
+                            Text("Next")
+                                .foregroundColor(.white)
+                        }
+                    }
+                    .disabled(!isNextButtonEnabled())
+                    .padding(.top, 50)
+                }
+                .padding(.bottom, 110)
+            }
+        }
+        .navigationBarBackButtonHidden(true)
+    }
+    
+    private func isNextButtonEnabled() -> Bool {
+        return !statement2.isEmpty
+    }
+}
+
 struct ReverseBSum: View {
 var texts: [String]
 @State private var showAllTexts = false

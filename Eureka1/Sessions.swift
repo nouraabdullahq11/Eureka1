@@ -225,7 +225,6 @@ struct session_RandomWords2: View {
 
     var items: [DataItem]
     var sessionName: String
-    @Environment(\.modelContext) private var context
     @Binding var generaterSelection: Int
     @State private var timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
 
@@ -288,6 +287,7 @@ struct session_RandomWords2: View {
                             }
                             Button(action: {
                                 showCheckmarks = true
+                                showNextButton = isNextStepButtonEnabled
                             }) {
                                 Text("Next Step")
                                     .frame(width: 337, height: 39)
@@ -300,51 +300,7 @@ struct session_RandomWords2: View {
                             }
                         }
                         if showCheckmarks {
-                            Text("Select a word")
-                                .font(.system(size: 20, weight: .semibold))
-
-                            ForEach(likedWords, id: \.self) { word in
-                                HStack {
-                                    Image(systemName: selectedWord == word ? "checkmark.square.fill" : "square")
-                                        .resizable()
-                                        .frame(width: 20, height: 20)
-                                        .foregroundColor(.blue)
-                                        .onTapGesture {
-                                            selectedWord = word
-                                            showNextButton = true
-                                        }
-
-                                    Text(word)
-                                        .font(.system(size: 18))
-                                }
-                            }
-
-                            if showNextButton {
-                                if generaterSelection == 1 {
-                                    NavigationLink(
-                                        destination: session_Crazy8(
-                                            likedWords: likedWords, items: items,
-                                            sessionName: sessionName,
-                                            userInputs: enteredValues,
-                                            displayedQuestion: dataManager.questions.first?.text ?? "", selectedWord: selectedWord ?? ""
-                                        )
-                                    ) {
-                                        Text("Next to Crazy 8")
-                                    }
-                                } else {
-                                    NavigationLink(
-                                        destination: Session_ReverseBrainstorming(
-                                            items: items,
-                                            sessionName: sessionName,
-                                            userInputs: enteredValues,
-                                            displayedQuestion: dataManager.questions.first?.text ?? "", selectedWord: selectedWord ?? "",
-                                            likedWords: likedWords
-                                        )
-                                    ) {
-                                        Text("Next to Reverse Brainstorming")
-                                    }
-                                }
-                            }
+                            // Remaining code
                         }
                     }
                 }
@@ -366,6 +322,7 @@ struct session_RandomWords2: View {
         }
     }
 }
+
 
 
 
@@ -946,12 +903,17 @@ var body: some View {
         }
     }.navigationBarBackButtonHidden(true)
 }
+    
     func enteredValueForSelectedWord() -> String {
          if let index = likedWords.firstIndex(of: selectedWord) {
              return userInputs[index]
          }
          return ""
      }
+    private func isNextButtonEnabled() -> Bool {
+        return !statement.isEmpty && !answer1.isEmpty && !Answer2.isEmpty && !Answer3.isEmpty
+    }
+
 struct ReversAnswers: View {
   
    var statement: String
