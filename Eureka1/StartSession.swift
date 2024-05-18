@@ -265,7 +265,13 @@ var body: some View {
                         startSession()
                         // Check the session name right after it's supposed to be set
                         print("Session Name on Save: \(sessionName)")
-                    }
+                    } .font(.system(size: 18))
+                        .padding()
+//                            .background(likedWords.count >= 3 ? Color.orange : Color.gray)
+                        .frame(width: 337, height: 39)
+                        .background(Color.button)
+                        .foregroundColor(.white)
+                        .clipShape(RoundedRectangle(cornerRadius: 5))
 
                     .disabled(sessionName.isEmpty)
                     
