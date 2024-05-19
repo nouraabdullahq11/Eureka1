@@ -1174,7 +1174,7 @@ struct Session_ReverseBrainstorming: View {
                             }
                             .disabled(!areAllFieldsFilled()) // Disable button if not all fields are filled
                         }
-                    }.padding(.bottom, 210)
+                    }.padding(.bottom, 240)
                 }
             }.navigationBarBackButtonHidden(true)
         }
@@ -1221,7 +1221,7 @@ struct Session_ReverseBrainstorming: View {
                                     .frame(width: 400 , height: 150)
                                 
                                 
-                            }.padding(.bottom , 50)
+                            }.padding(.bottom)
                             ZStack(alignment: .topLeading) {
                             Text("The Reversed Answers: \(answer4) \(answer5) \(answer6)")
                                     .padding(.trailing , 90)
@@ -1233,12 +1233,17 @@ struct Session_ReverseBrainstorming: View {
                                         RoundedRectangle(cornerRadius: 5)
                                         .stroke(Color.white, lineWidth: 2)
                                                     )
-                            }.padding(.bottom , 150)
+                            }.padding(.bottom , 50)
                             
                             VStack{
             Text("How can we combine all the the answers into solution ?")
                     .multilineTextAlignment(.leading)
                     .font(.callout)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .lineLimit(nil) // Allow multiple lines
+                    .padding(.trailing)
+                    .fixedSize(horizontal: false, vertical: true) // Expand vertically
+                   // .font(.system(size: 15))
                   //  .padding(.horizontal)
                                 
                             }.padding()
