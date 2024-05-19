@@ -848,292 +848,242 @@ generator.impactOccurred()
 
 struct Session_ReverseBrainstorming: View {
     
-var items: [DataItem]
-var sessionName: String  // This should hold the value across this view's lifecycle
-@Environment(\.modelContext) private var context
-@State private var problemStatement: String = ""
-@State private var navigatehome: Bool = false // Track if session started
-// @State private var navigatehome: Bool = false
-
-@Environment(\.presentationMode) var presentationMode // Environment to control the view presentation
-var userInputs: [String]
-//var checkedInput: String
-var displayedQuestion: String
-    var selectedWord: String
-@State private var statement = ""
-@State public var answer1 : String = ""
-@State public var Answer2 : String = ""
-@State public var Answer3 : String = ""
-
-    var likedWords: [String]
-var body: some View {
-    NavigationStack{
-        ZStack{
-            Color.gray1
-                .ignoresSafeArea()
-            VStack{
-                ZStack{
-                    Image("backgrund")
-                        .resizable()
-                        .frame(width: 395 , height: 150)
-                    
-                       
-                    Text("Revers Brainstorming")
-                        .font(.title2)
-                        .bold()
-                        .foregroundColor(.white)
-                    .padding(.trailing , 100)
-                  
-                }.offset(x:0,y: -100)
-                 
-                // مفروض نوحد جملتهم
-                Text("Entered Value: \(enteredValueForSelectedWord())")
-                               .font(.largeTitle)
-                               .padding()
-                Text("Selected Word: \(selectedWord)")
-                NavigationLink(destination: ReversAnswers(statement: statement, answer1: $answer1 , answer2: $Answer2 , answer3: $Answer3, items: items, sessionName: sessionName)) {
-                                       ZStack{
-                                           Rectangle()
-                                               .frame(width: 337 , height: 39)
-                                               .cornerRadius(5)
-                                               .foregroundColor(.laitOrange)
-                                           Text("Next")
-                                               .foregroundColor(.white)
-                                       }
-                                   }
-        Text("How can you make it worse ?")
-                    .padding(.trailing , 100)
-                
-                ZStack{
-                            Rectangle()
-                        .frame(width: 343 , height: 82)
-                                    .cornerRadius(10)
-                            .foregroundColor(.orange2)
-            
-                        TextField("name", text: $answer1)
-                                .frame(width: 322 , height: 63)
-                            .textFieldStyle(.roundedBorder)
-                                           .padding()
-                                    .onSubmit {
-               //                                    savedTexts
-               //                            text = ""
-                                           }
-                                       
-                                   }
-                                   
-                                   ZStack{
-                                       Rectangle()
-                                           .frame(width: 343 , height: 82)
-                                           .cornerRadius(10)
-                                           .foregroundColor(.orange3)
-                                       TextField("name", text: $Answer2)
-                                           .frame(width: 322 , height: 63)
-                                           .textFieldStyle(.roundedBorder)
-                                           .padding()
-                                           .onSubmit {
-               //                                    savedTexts
-               //                            text = ""
-                                           }
-                                       
-                                   }
-                                   ZStack{
-                                       Rectangle()
-                                           .frame(width: 343 , height: 82)
-                                           .cornerRadius(10)
-                                           .foregroundColor(.orange4)
-                                       TextField("Much Worse ", text: $Answer3)
-                                           .frame(width: 322 , height: 63)
-                                           .textFieldStyle(.roundedBorder)
-                                           .padding()
-                                           .onSubmit {
-               //                                    savedTexts
-               //                            text = ""
-                                           }
-                                       
-                                   }
-                                   
-                
-
-                
-            }
-        }
-    }.navigationBarBackButtonHidden(true)
-}
-    func enteredValueForSelectedWord() -> String {
-         if let index = likedWords.firstIndex(of: selectedWord) {
-             return userInputs[index]
-         }
-         return ""
-     }
-struct ReversAnswers: View {
-  
-   var statement: String
-    @State public var Answer4 = ""
-    @State public var Answer5 = ""
-    @State public var Answer6 = ""
-   @Binding var answer1 : String
-    @Binding var answer2 : String
-    @Binding var answer3 : String
-    
     var items: [DataItem]
     var sessionName: String  // This should hold the value across this view's lifecycle
     @Environment(\.modelContext) private var context
+    @State private var problemStatement: String = ""
+    @State private var navigatehome: Bool = false // Track if session started
+    @Environment(\.presentationMode) var presentationMode // Environment to control the view presentation
+    var userInputs: [String]
+    var displayedQuestion: String
+    var selectedWord: String
+    @State private var statement = ""
+    @State public var answer1: String = ""
+    @State public var Answer2: String = ""
+    @State public var Answer3: String = ""
+    var likedWords: [String]
+    
     var body: some View {
-        NavigationStack{
-            ZStack{
+        NavigationStack {
+            ZStack {
                 Color.gray1
                     .ignoresSafeArea()
-                VStack{
-                    ZStack{
+                VStack {
+                    ZStack {
                         Image("backgrund")
                             .resizable()
-                            .frame(width: 395 , height: 150)
-                        
-                           // .padding(.bottom,630)
+                            .frame(width: 395, height: 150)
                         Text("Revers Brainstorming")
-                      
                             .font(.title2)
                             .bold()
                             .foregroundColor(.white)
-                        .padding(.trailing , 100)
-                          //  .padding(.bottom,600)
-                    }.offset(x:0,y: -120)
-                     
+                            .padding(.trailing, 100)
+                    }.offset(x: 0, y: -100)
                     
-                    NavigationLink(destination: ReversAnswers2(answer4: $Answer4, answer5: $Answer5, answer6: $Answer6, items: items, sessionName: sessionName)){
-                            ZStack{
-                                Rectangle()
-                                    .frame(width: 337 , height: 39)
-                                    .cornerRadius(5)
-                                    .foregroundColor(.laitOrange)
-                                Text("Next")
-                                    .foregroundColor(.white)
-                            }
-                        }
-                    Text("Revers your answers :")
-                        .padding(.trailing , 100)
-                       
-                            Text("First Answer : \(answer1)")
-                                .foregroundColor(.gray)
-                                .bold()
-                               .padding(.trailing , 100)
-                           
-                        
-                    TextField("name", text: $Answer4)
-                        .textFieldStyle(.roundedBorder)
+                    Text("Entered Value: \(enteredValueForSelectedWord())")
+                        .font(.largeTitle)
                         .padding()
-                        .onSubmit {
-                            print(Answer4)
+                    Text("Selected Word: \(selectedWord)")
+                    
+                    NavigationLink(destination: ReversAnswers1(statement: statement, answer1: $answer1, answer2: $Answer2, answer3: $Answer3, items: items, sessionName: sessionName)) {
+                        ZStack {
+                            Rectangle()
+                                .frame(width: 337, height: 39)
+                                .cornerRadius(5)
+                                .foregroundColor(areAllFieldsFilled() ? .laitOrange : .gray) // Change color based on field state
+                            Text("Next")
+                                .foregroundColor(.white)
                         }
-                 
-                    Text("Second Answer:\(answer2)")
-                        .foregroundColor(.gray)
-                        .bold()
+                    }
+                    .disabled(!areAllFieldsFilled()) // Disable button if not all fields are filled
                     
-                          
-                             
-                            TextField("name", text: $Answer5)
-                                .frame(width: 322 , height: 63)
-                                .textFieldStyle(.roundedBorder)
-                                .padding()
-                                .onSubmit {
-                                    print(Answer5)
-                                }
-                            
-                    Text("Third Answer : \(answer3)")
-                        .foregroundColor(.gray)
-                        .bold()
-                        
-                       
-                            TextField("name", text: $Answer6)
-                                .frame(width: 322 , height: 63)
-                                .textFieldStyle(.roundedBorder)
-                                .padding()
-                                .onSubmit {
-                                    print(Answer6)
-                                }
-                        
-                   
+                    Text("How can you make it worse?")
+                        .padding(.trailing, 100)
                     
+                    ZStack {
+                        Rectangle()
+                            .frame(width: 343, height: 82)
+                            .cornerRadius(10)
+                            .foregroundColor(.orange2)
+                        TextField("Worse", text: $answer1)
+                            .frame(width: 322, height: 63)
+                            .textFieldStyle(.roundedBorder)
+                            .padding()
+                    }
                     
+                    ZStack {
+                        Rectangle()
+                            .frame(width: 343, height: 82)
+                            .cornerRadius(10)
+                            .foregroundColor(.orange3)
+                        TextField("much worse", text: $Answer2)
+                            .frame(width: 322, height: 63)
+                            .textFieldStyle(.roundedBorder)
+                            .padding()
+                    }
                     
+                    ZStack {
+                        Rectangle()
+                            .frame(width: 343, height: 82)
+                            .cornerRadius(10)
+                            .foregroundColor(.orange4)
+                        TextField("Worst", text: $Answer3)
+                            .frame(width: 322, height: 63)
+                            .textFieldStyle(.roundedBorder)
+                            .padding()
+                    }
                 }
-           
             }
-
         }.navigationBarBackButtonHidden(true)
+    }
+    
+    func enteredValueForSelectedWord() -> String {
+        if let index = likedWords.firstIndex(of: selectedWord) {
+            return userInputs[index]
+        }
+        return ""
+    }
+    
+    func areAllFieldsFilled() -> Bool {
+        return !answer1.isEmpty && !Answer2.isEmpty && !Answer3.isEmpty
     }
 }
 
+struct ReversAnswers1: View {
+    var statement: String
+    @State public var Answer4 = ""
+    @State public var Answer5 = ""
+    @State public var Answer6 = ""
+    @Binding var answer1: String
+    @Binding var answer2: String
+    @Binding var answer3: String
+    var items: [DataItem]
+    var sessionName: String  // This should hold the value across this view's lifecycle
+    @Environment(\.modelContext) private var context
+    
+    var body: some View {
+        NavigationStack {
+            ZStack {
+                Color.gray1
+                    .ignoresSafeArea()
+                VStack {
+                    ZStack {
+                        Image("backgrund")
+                            .resizable()
+                            .frame(width: 395, height: 150)
+                        Text("Revers Brainstorming")
+                            .font(.title2)
+                            .bold()
+                            .foregroundColor(.white)
+                            .padding(.trailing, 100)
+                    }.offset(x: 0, y: -120)
+                    
+                    NavigationLink(destination: ReversAnswers21(answer4: $Answer4, answer5: $Answer5, answer6: $Answer6, items: items, sessionName: sessionName)) {
+                        ZStack {
+                            Rectangle()
+                                .frame(width: 337, height: 39)
+                                .cornerRadius(5)
+                                .foregroundColor(areAllFieldsFilled() ? .laitOrange : .gray) // Change color based on field state
+                            Text("Next")
+                                .foregroundColor(.white)
+                        }
+                    }
+                    .disabled(!areAllFieldsFilled()) // Disable button if not all fields are filled
+                    
+                    Text("Revers your answers:")
+                        .padding(.trailing, 100)
+                    Text("First Answer: \(answer1)")
+                        .foregroundColor(.gray)
+                        .bold()
+                        .padding(.trailing, 100)
+                    
+                    TextField("Better", text: $Answer4)
+                        .textFieldStyle(.roundedBorder)
+                        .padding()
+                    
+                    Text("Second Answer: \(answer2)")
+                        .foregroundColor(.gray)
+                        .bold()
+                    
+                    TextField("Much better", text: $Answer5)
+                        .frame(width: 322, height: 63)
+                        .textFieldStyle(.roundedBorder)
+                        .padding()
+                    
+                    Text("Third Answer: \(answer3)")
+                        .foregroundColor(.gray)
+                        .bold()
+                    
+                    TextField("Best", text: $Answer6)
+                        .frame(width: 322, height: 63)
+                        .textFieldStyle(.roundedBorder)
+                        .padding()
+                }
+            }
+        }.navigationBarBackButtonHidden(true)
+    }
+    
+    func areAllFieldsFilled() -> Bool {
+        return !Answer4.isEmpty && !Answer5.isEmpty && !Answer6.isEmpty
+    }
+}
 
-struct  ReversAnswers2: View {
+struct ReversAnswers21: View {
     @State private var isSummaryPresented = false
     @State private var statement2 = ""
-    @Binding var answer4 : String
-     @Binding var answer5 : String
-     @Binding var answer6 : String
+    @Binding var answer4: String
+    @Binding var answer5: String
+    @Binding var answer6: String
     @State private var savedTexts: [String] = []
     var items: [DataItem]
     var sessionName: String  // This should hold the value across this view's lifecycle
     @Environment(\.modelContext) private var context
     @State private var problemStatement: String = ""
     @State private var navigateSummary: Bool = false // Track if session started
-    // @State private var navigatehome: Bool = false
-
- //   @Environment(\.presentationMode) var presentationMode // Environment to control the view presentation
+    
     var body: some View {
-        NavigationStack{
-            ZStack{
+        NavigationStack {
+            ZStack {
                 Color.gray1
                     .ignoresSafeArea()
-                VStack{
-                    ZStack{
+                VStack {
+                    ZStack {
                         Image("backgrund")
                             .resizable()
-                            .frame(width: 395 , height: 150)
-                        
-                        VStack{
-                            Text("Revers Brainstorming ")
+                            .frame(width: 395, height: 150)
+                        VStack {
+                            Text("Revers Brainstorming")
                                 .font(.title2)
                                 .bold()
                                 .foregroundColor(.white)
-                                .padding(.trailing , 100)
-                            //  .padding(.bottom,600)
+                                .padding(.trailing, 100)
                         }
-                    }.offset(x:0,y: -120)
-                     
+                    }.offset(x: 0, y: -120)
                     
-                    
-                    ZStack{
+                    ZStack {
                         Rectangle()
-                            .frame(width: 361 , height: 156)
+                            .frame(width: 361, height: 156)
                             .cornerRadius(10)
                             .foregroundColor(.white)
-                        Text("The Reversed Answers :\(answer4) \(answer5) \(answer6)")
-                    } .padding()
+                        Text("The Reversed Answers: \(answer4) \(answer5) \(answer6)")
+                    }
+                    .padding()
+                    
                     NavigationLink(destination: BrainstormingSummary(problemStatement: problemStatement), isActive: $isSummaryPresented) {
                         EmptyView() // Empty view to trigger navigation
                     }
-
                     .hidden()
+                    
                     Button("Save") {
                         saveSession()
                     }
-
-                    Text("How can we combine all the the answers into solution ?")
-
+                    
+                    Text("How can we combine all the answers into a solution?")
+                    
                     TextField("Enter problem statement", text: $problemStatement)
-                                .frame(width: 322 , height: 63)
-                                .textFieldStyle(.roundedBorder)
-                                .padding()
-                                .onSubmit {
-                                    print(problemStatement)
-                                }
-                            
-            
-                        
-                    
-                    
+                        .frame(width: 322, height: 63)
+                        .textFieldStyle(.roundedBorder)
+                        .padding()
                 }
             }
         }.navigationBarBackButtonHidden(true)
@@ -1165,14 +1115,8 @@ struct  ReversAnswers2: View {
         
         //presentationMode.wrappedValue.dismiss() // Dismiss the view to return to the previous ContentView
         isSummaryPresented = true
-       // navigatehome = true
         print("navigatehome set to true")
     }
-}
-//    #Preview {
-//        ReversAnswers2()
-//    }
-
 }
 struct BrainstormingSummary: View {
   //  var texts: [String]

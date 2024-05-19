@@ -1297,7 +1297,8 @@ struct try_ReverseBrainstorming: View {
                             .padding(.trailing, 100)
 
                         ZStack(alignment: .topLeading) {
-                            TextField("Problem statements", text: $statement)
+                            TextField("EX: Improving the COVID-19 Vaccination Process ", text: $statement)
+                                .font(.caption)
                                 .frame(maxWidth: .infinity)
                                 .frame(height: 100)
                                 .background(Color.white)
@@ -1318,7 +1319,8 @@ struct try_ReverseBrainstorming: View {
                                 .cornerRadius(10)
                                 .foregroundColor(.orange2)
                             ZStack(alignment: .topLeading) {
-                                TextField("name", text: $answer1)
+                                TextField("Not Scaling up vaccine manufacturing ", text: $answer1)
+                                    .font(.caption)
                                     .frame(width: 322, height: 63)
                                     .background(Color.white)
                                     .overlay(
@@ -1338,7 +1340,8 @@ struct try_ReverseBrainstorming: View {
                             .cornerRadius(10)
                             .foregroundColor(.orange3)
                         ZStack(alignment: .topLeading) {
-                            TextField("name", text: $Answer2)
+                            TextField("Delaying vaccination for adults above the age of 65", text: $Answer2)
+                                .font(.caption)
                                 .frame(width: 322, height: 63)
                                 .background(Color.white)
                                 .overlay(
@@ -1356,7 +1359,8 @@ struct try_ReverseBrainstorming: View {
                             .cornerRadius(10)
                             .foregroundColor(.orange4)
                         ZStack(alignment: .topLeading) {
-                            TextField("name", text: $Answer3)
+                            TextField("To not prioritize vaccination in areas with rising cases", text: $Answer3)
+                                .font(.caption)
                                 .frame(width: 322, height: 63)
                                 .background(Color.white)
                                 .overlay(
@@ -1441,7 +1445,8 @@ struct ReversAnswers: View {
                         .padding()
                     
                     ZStack(alignment: .topLeading) {
-                        TextField("name", text: $Answer4)
+                        TextField("Scaling up vaccine manufacturing ", text: $Answer4)
+                            .font(.caption)
                             .frame(width: 331, height: 58)
                             .background(Color.white)
                             .overlay(
@@ -1459,7 +1464,8 @@ struct ReversAnswers: View {
                         .padding()
                     
                     ZStack(alignment: .topLeading) {
-                        TextField("name", text: $Answer5)
+                        TextField("Speeding up vaccination for adults above the age of 65", text: $Answer5)
+                            .font(.caption)
                             .frame(width: 331, height: 58)
                             .background(Color.white)
                             .overlay(
@@ -1478,7 +1484,8 @@ struct ReversAnswers: View {
                         .padding()
                     
                     ZStack(alignment: .topLeading) {
-                        TextField("name", text: $Answer6)
+                        TextField("Prioritize vaccination in areas with rising cases", text: $Answer6)
+                            .font(.caption)
                             .frame(width: 331, height: 58)
                             .background(Color.white)
                             .overlay(
@@ -1565,14 +1572,20 @@ struct ReversAnswers2: View {
                     
                     VStack {
                         Text("How can we combine all the answers into a solution?")
+                            .font(.callout)  // You can change the font size if needed
                             .multilineTextAlignment(.leading)
                             .padding(.horizontal)
+                            .fixedSize(horizontal: false, vertical: true)  // Ensure the text wraps and is not clipped
                     }
+                    .frame(maxWidth: .infinity, alignment: .leading)  // Ensure the VStack takes up available width
                     .padding()
-                    .padding(.horizontal)
+                  //  .padding()
+                   // .padding(.horizontal)
                     
                     ZStack(alignment: .topLeading) {
-                        TextField("name", text: $statement2)
+                        TextField("we can now analyze them to determine which ones to prioritize first", text: $statement2)
+                            .font(.caption)
+                            .font(.system(size: 3))
                             .frame(width: 331, height: 58)
                             .background(Color.white)
                             .overlay(
