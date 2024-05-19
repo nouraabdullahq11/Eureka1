@@ -17,6 +17,9 @@ import SwiftUI
 import CoreHaptics
 import SwiftData
 import  Lottie
+import Firebase
+
+//import SwiftUI
 
 struct session_RandomWords: View {
     var items: [DataItem]
@@ -32,42 +35,49 @@ struct session_RandomWords: View {
     @State private var isTimerRunning = false
     @State private var timeRemaining = 6
     @State private var navigateToNextPage = false
+    @State private var shuffledWords: [Word] = []
     @Environment(\.colorScheme) var colorScheme
     var timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
+    
+    init(items: [DataItem], sessionName: String, generaterSelection: Binding<Int>) {
+        self.items = items
+        self.sessionName = sessionName
+        self._generaterSelection = generaterSelection
+        
+        // Initialize the shuffled words
+        _shuffledWords = State(initialValue: [])
+    }
     
     var body: some View {
         NavigationView {
             ZStack {
                 Color.gray1
-                               .ignoresSafeArea()
-                           
-                           Image("backgrund")
-                               .resizable()
-                               .frame(width: 400 , height: 150)
-                               .padding(.bottom,770)
+                    .ignoresSafeArea()
                 
-                           VStack {
-                               Text("Random Word")
-                                   .font(.system(size: 29, weight: .semibold))
-                                   .padding(.bottom,680)
-                                   .padding(.trailing, 170)
-                                   .foregroundColor(colorScheme == .dark ? .black : .white)
-                           }
+                Image("backgrund")
+                    .resizable()
+                    .frame(width: 400 , height: 150)
+                    .padding(.bottom,770)
+                
                 VStack {
-                  
-                    
+                    Text("Random Word")
+                        .font(.system(size: 29, weight: .semibold))
+                        .padding(.bottom,680)
+                        .padding(.trailing, 170)
+                        .foregroundColor(colorScheme == .dark ? .black : .white)
+                }
+                
+                VStack {
                     Text(timerString)
                         .font(.system(size: 60, weight: .bold))
-                                          .padding(.top, 100)
-                                          .padding(.bottom, 20)
-                    
+                        .padding(.top, 100)
+                        .padding(.bottom, 20)
                         .onReceive(timer) { _ in
                             if isTimerRunning {
                                 if timeRemaining > 0 {
                                     timeRemaining -= 1
                                 } else {
                                     isTimerRunning = false
-                                    // Timer completed actions here
                                     navigateToNextPage = true
                                 }
                             }
@@ -75,13 +85,13 @@ struct session_RandomWords: View {
                     
                     Text("Double-tap meaningful words or swipe to change.")
                         .font(.system(size: 18, weight: .medium))
-                                           .multilineTextAlignment(.center)
-                                           .padding(.bottom, 20)
-
-                    if !dataManager.words.isEmpty {
+                        .multilineTextAlignment(.center)
+                        .padding(.bottom, 20)
+                    
+                    if !shuffledWords.isEmpty {
                         ZStack {
-                            ForEach(dataManager.words.indices.reversed(), id: \.self) { index in
-                                CardView(word: dataManager.words[index].text)
+                            ForEach(shuffledWords.indices.reversed(), id: \.self) { index in
+                                CardView(word: shuffledWords[index].text)
                                     .zIndex(currentIndex == index ? 1 : 0)
                                     .offset(x: index == currentIndex ? dragState.width : 0, y: index == currentIndex ? dragState.height : 0)
                                     .rotationEffect(.degrees(Double(dragState.width / 20)), anchor: .bottom)
@@ -108,14 +118,14 @@ struct session_RandomWords: View {
                                     .animation(.spring(), value: currentIndex)
                             }
                             RoundedRectangle(cornerRadius: 10)
-                                .foregroundColor(Color.white1) // Background color of the card
-                                .shadow(color: colorScheme == .dark ? Color.gray.opacity(0.1) : Color.gray.opacity(0.5), radius: 10, x: 0, y: 2) // Add shadow
+                                .foregroundColor(Color.white1)
+                                .shadow(color: colorScheme == .dark ? Color.gray.opacity(0.1) : Color.gray.opacity(0.5), radius: 10, x: 0, y: 2)
                                 .frame(width: 300, height: 280)
                                 .rotationEffect(.degrees(7))
                         }
                         .onTapGesture(count: 2) {
                             if likedWords.count < 3 {
-                                let word = dataManager.words[currentIndex].text
+                                let word = shuffledWords[currentIndex].text
                                 if !likedWords.contains(word) {
                                     likedWords.append(word)
                                     updateLikedWordBoxes()
@@ -143,7 +153,6 @@ struct session_RandomWords: View {
                         Text("Next Step")
                             .font(.system(size: 18))
                             .padding()
-//                            .background(likedWords.count >= 3 ? Color.orange : Color.gray)
                             .frame(width: 337, height: 39)
                             .background(Color.button)
                             .foregroundColor(.white)
@@ -154,44 +163,47 @@ struct session_RandomWords: View {
                     .padding(.top, 5)
                     .padding(.bottom, 30)
                 }
-            }.navigationBarBackButtonHidden(true)
+            }
+            .navigationBarBackButtonHidden(true)
             .background(
                 NavigationLink(destination: session_RandomWords2(likedWords: likedWords, items: items, sessionName: sessionName, generaterSelection: $generaterSelection), isActive: $navigateToNextPage) {
                     EmptyView()
                 }
                 .hidden()
             )
-        }.navigationBarBackButtonHidden(true)
+            .onAppear {
+                // Shuffle the words once when the view appears
+                shuffledWords = dataManager.words.shuffled()
+            }
+        }
+        .navigationBarBackButtonHidden(true)
     }
     
     var timerString: String {
         let minutes = timeRemaining / 60
         let seconds = timeRemaining % 60
-
+        
         if minutes < 10 {
-               return String(format: "%d:%02d", minutes, seconds)
-           } else {
-               return String(format: "%02d:%02d", minutes, seconds)
-           }
+            return String(format: "%d:%02d", minutes, seconds)
+        } else {
+            return String(format: "%02d:%02d", minutes, seconds)
+        }
     }
     
-    
-    
     func startTimerIfNeeded() {
-        if !isTimerRunning {
+        if (!isTimerRunning) {
             isTimerRunning = true
-           // timeRemaining = 6
         }
     }
     
     func getNextIndex() -> Int {
         let nextIndex = currentIndex + 1
-        return nextIndex < dataManager.words.count ? nextIndex : 0
+        return nextIndex < shuffledWords.count ? nextIndex : 0
     }
     
     func getPreviousIndex() -> Int {
         let previousIndex = currentIndex - 1
-        return previousIndex >= 0 ? previousIndex : dataManager.words.count - 1
+        return previousIndex >= 0 ? previousIndex : shuffledWords.count - 1
     }
     
     func updateLikedWordBoxes() {
@@ -203,20 +215,19 @@ struct session_RandomWords: View {
 
 struct CardView: View {
     var word: String
-        @Environment(\.colorScheme) var colorScheme
+    @Environment(\.colorScheme) var colorScheme
+    
     var body: some View {
-    Text(word)
-        .font(.largeTitle)
-        .frame(width: 300, height: 280)
-        .background(Color.white1)
-        .cornerRadius(10)
-    .shadow(color: colorScheme == .dark ? Color.white.opacity(0.02) : Color.gray.opacity(0.5), radius: 5, x: 0, y: 2)
-    .foregroundColor(colorScheme == .dark ? .white : .black)
+        Text(word)
+            .font(.largeTitle)
+            .frame(width: 300, height: 280)
+            .background(Color.white1)
+            .cornerRadius(10)
+            .shadow(color: colorScheme == .dark ? Color.white.opacity(0.02) : Color.gray.opacity(0.5), radius: 5, x: 0, y: 2)
+            .foregroundColor(colorScheme == .dark ? .white : .black)
+    }
+}
 
-    //    .overlay(
-    //        RoundedRectangle(cornerRadius: 10).stroke(Color.gray, lineWidth: 1)
-    //    )
-    }}
 
 struct LikedWordBox1: View {
     var word: String
@@ -389,7 +400,6 @@ struct session_RandomWords2: View {
 
 // // // // // // // // /// // /// // / / /  / /// // /
 
-
 struct session_AnsQuestions: View {
     var likedWords: [String]
     @State private var enteredValues: [String]
@@ -424,6 +434,7 @@ struct session_AnsQuestions: View {
     @State private var currentIndex = 0
     @State private var userInputs = ["", "", ""]
     @State private var checkedIndex: Int? = nil  // Optional Int to keep track of which checkbox is checked
+    @State private var shuffledQuestions: [Question] = []
 
     var body: some View {
         NavigationView {
@@ -438,14 +449,16 @@ struct session_AnsQuestions: View {
                         .font(.system(size: 60, weight: .bold))
                         .padding(.bottom, 20)
 
-                    if !dataManager.questions.isEmpty {
-                        Text(dataManager.questions[currentIndex].text)
-                            .font(.largeTitle)
-                            .padding(.bottom, 10)
+                    if !shuffledQuestions.isEmpty {
+                        Text(shuffledQuestions[currentIndex].text)
+                            .bold()
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .lineLimit(nil) // Allow multiple lines
+                            .padding(.trailing)
+                            .fixedSize(horizontal: false, vertical: true) // Expand vertically
 
                         Button("New Question >>") {
-                            // Generate a new index and clear the text fields and checkbox
-                            currentIndex = generateRandomIndex(excluding: currentIndex)
+                            currentIndex = getNextIndex()
                             userInputs = ["", "", ""]
                             checkedIndex = nil
                         }
@@ -489,32 +502,43 @@ struct session_AnsQuestions: View {
                                     destination: session_Crazy8(
                                         likedWords: likedWords,
                                         items: items,
-                                               sessionName: sessionName,
-                                               userInputs: enteredValues,
-                                               displayedQuestion: dataManager.questions.first?.text ?? "",
-                                               selectedWord: checkedIndex != nil ? userInputs[checkedIndex!] : ""
-                                           ), isActive: $navigateTonext
+                                        sessionName: sessionName,
+                                        userInputs: enteredValues,
+                                        displayedQuestion: shuffledQuestions[currentIndex].text,
+                                        selectedWord: checkedIndex != nil ? userInputs[checkedIndex!] : ""
+                                    ), isActive: $navigateTonext
                                 ) {
                                     Text("Next to Crazy 8")
+                                        .font(.system(size: 18))
+                                        .padding()
+                                        .frame(width: 337, height: 39)
+                                        .background(Color.button)
+                                        .foregroundColor(.white)
+                                        .clipShape(RoundedRectangle(cornerRadius: 5))
                                 }
                                 .disabled(!isNextStepButtonEnabled || checkedIndex == nil)
                             } else {
                                 NavigationLink(
                                     destination: Session_ReverseBrainstorming(
-                                                    items: items,
-                                                    sessionName: sessionName,
-                                                    userInputs: enteredValues,
-                                                    displayedQuestion: dataManager.questions.first?.text ?? "",
-                                                    selectedWord: checkedIndex != nil ? userInputs[checkedIndex!] : "",
-                                                    likedWords: likedWords
-                                                ), isActive: $navigateTonext
-                                            ){
+                                        items: items,
+                                        sessionName: sessionName,
+                                        userInputs: enteredValues,
+                                        displayedQuestion: shuffledQuestions[currentIndex].text,
+                                        selectedWord: checkedIndex != nil ? userInputs[checkedIndex!] : "",
+                                        likedWords: likedWords
+                                    ), isActive: $navigateTonext
+                                ) {
                                     Text("Next to Reverse Brainstorming")
+                                        .font(.system(size: 18))
+                                        .padding()
+                                        .frame(width: 337, height: 39)
+                                        .background(Color.button)
+                                        .foregroundColor(.white)
+                                        .clipShape(RoundedRectangle(cornerRadius: 5))
                                 }
                                 .disabled(!isNextStepButtonEnabled || checkedIndex == nil)
                             }
                         }
-
                     } else {
                         Text("No questions available")
                             .padding()
@@ -532,6 +556,10 @@ struct session_AnsQuestions: View {
             }
         }
         .navigationBarBackButtonHidden(true)
+        .onAppear {
+            shuffledQuestions = dataManager.questions.shuffled()
+            currentIndex = 0
+        }
         .onReceive(timer) { _ in
             if isTimerRunning {
                 if timeRemaining > 0 {
@@ -547,12 +575,9 @@ struct session_AnsQuestions: View {
         .environmentObject(DataManager())
     }
 
-    func generateRandomIndex(excluding currentIndex: Int) -> Int {
-        var newIndex: Int
-        repeat {
-            newIndex = Int.random(in: 0..<dataManager.questions.count)
-        } while newIndex == currentIndex && dataManager.questions.count > 1
-        return newIndex
+    func getNextIndex() -> Int {
+        let nextIndex = currentIndex + 1
+        return nextIndex < shuffledQuestions.count ? nextIndex : 0
     }
 
     private func startTimer() {
@@ -565,6 +590,7 @@ struct session_AnsQuestions: View {
         return String(format: "%02d:%02d", minutes, remainingSeconds)
     }
 }
+
 
 struct session_Crazy8: View
 {
@@ -853,7 +879,7 @@ struct Session_ReverseBrainstorming: View {
             configuration
                 .multilineTextAlignment(.leading)
                 .padding(.leading) // Push text to the left
-                .padding(.bottom , 40) // Push text to the top
+                .padding(.bottom , 10) // Push text to the top
         }
     }
     
@@ -902,8 +928,9 @@ struct Session_ReverseBrainstorming: View {
                             Text("Find a Problem of your Idea or Solution statement:")
                                 .bold()
                                 .frame(maxWidth: .infinity , alignment: .leading)
+                                .lineLimit(nil) // Allow multiple lines
                                 .padding(.trailing)
-                            
+                                .fixedSize(horizontal: false, vertical: true) // Expand vertically
                             Text("Identify potential issues or problems with your solution or idea,and exaggerate them to uncover areas that need improvement.")
                                             .font(.caption)
                                             .foregroundColor(.gray)
@@ -941,13 +968,13 @@ struct Session_ReverseBrainstorming: View {
                         
                         ZStack{
                             Rectangle()
-                                .frame(width: 343 , height: 82)
+                                .frame(width: 343 , height: 70)
                                 .cornerRadius(10)
                                 .foregroundColor(.orange2)
                             ZStack(alignment: .topLeading) {
                                 TextField("Worse", text: $answer1)
                                 
-                                    .frame(width: 322,height: 63)
+                                    .frame(width: 330 , height: 50)
                                     .background(Color.white)
                                     .overlay(
                                         
@@ -965,13 +992,13 @@ struct Session_ReverseBrainstorming: View {
                         
                         ZStack{
                             Rectangle()
-                                .frame(width: 343 , height: 82)
+                                .frame(width: 343 , height: 70)
                                 .cornerRadius(10)
                                 .foregroundColor(.orange3)
                             ZStack(alignment: .topLeading) {
                                 TextField("much worse", text: $Answer2)
                                 
-                                    .frame(width: 322,height: 63)
+                                    .frame(width: 330 , height: 50)
                                     .background(Color.white)
                                     .overlay(
                                         
@@ -990,13 +1017,12 @@ struct Session_ReverseBrainstorming: View {
                         
                         ZStack{
                             Rectangle()
-                                .frame(width: 343 , height: 82)
+                                .frame(width: 343 , height: 70)
                                 .cornerRadius(10)
                                 .foregroundColor(.orange4)
-                            ZStack(alignment: .topLeading) {
+                            ZStack(alignment: .center) {
                                 TextField("Worst", text: $Answer3)
-                                
-                                    .frame(width: 322,height: 63)
+                                    .frame(width: 330 , height: 50)
                                     .background(Color.white)
                                     .overlay(
                                         

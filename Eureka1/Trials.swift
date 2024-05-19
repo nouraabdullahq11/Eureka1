@@ -10,6 +10,7 @@
 import SwiftUI
 import CoreHaptics
 import Lottie
+import Firebase
 
 struct try_Crazy8: View {
 @State private var text: String = ""
@@ -391,16 +392,15 @@ generator.impactOccurred()
 
 
 
-
 struct try_AnsQuestions: View {
     @EnvironmentObject var dataManager: DataManager
     @State private var showPopup = false
     @State private var currentIndex = 0
     @State private var userInputs = ["", "", ""]
-    @State private var checkedIndex: Int? = nil  // Optional Int to keep track of which checkbox is checked
-
+    @State private var checkedIndex: Int? = nil
     @State private var isTimerRunning = false
-    @State private var timeRemaining = 90  // 3 minutes in seconds
+    @State private var timeRemaining = 90  // 1.5 minutes in seconds
+    @State private var shuffledQuestions: [Question] = []
 
     var body: some View {
         NavigationView {
@@ -411,7 +411,7 @@ struct try_AnsQuestions: View {
                 Image("backgrund")
                     .resizable()
                     .frame(width: 400 , height: 170)
-                    .padding(.bottom,820)
+                    .padding(.bottom, 820)
                 
                 Text("Answer the Question")
                     .font(.title)
@@ -425,15 +425,17 @@ struct try_AnsQuestions: View {
                         .font(.system(size: 60, weight: .bold))
                         .padding(.bottom, 20)
                     
-                    if !dataManager.questions.isEmpty {
-                        Text(dataManager.questions[currentIndex].text)
-                           
-                            .font(.largeTitle)
-                            .padding(.bottom, 10)
+                    if !shuffledQuestions.isEmpty {
+                        Text(shuffledQuestions[currentIndex].text)
+                            //.bold()
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .lineLimit(nil) // Allow multiple lines
+                            .padding(.trailing)
+                            .fixedSize(horizontal: false, vertical: true) // Expand vertically
                         
                         Button("New Question >>") {
                             // Generate a new index and clear the text fields and checkbox
-                            currentIndex = generateRandomIndex(excluding: currentIndex)
+                            currentIndex = getNextIndex()
                             userInputs = ["", "", ""]
                             checkedIndex = nil
                         }
@@ -469,15 +471,16 @@ struct try_AnsQuestions: View {
                                     .frame(height: 45)
                                     .background(Color.white)
                                     .overlay(
-                                  RoundedRectangle(cornerRadius: 5)
-                                 .stroke(Color.white, lineWidth: 2)
-                                                  )
-                                   
-                                } .padding(.leading , 20)
-                                    .padding(.trailing , 15)
-                                    .padding(.bottom , 30)
+                                        RoundedRectangle(cornerRadius: 5)
+                                            .stroke(Color.white, lineWidth: 2)
+                                    )
+                                }
+                                .padding(.leading , 20)
+                                .padding(.trailing , 15)
+                                .padding(.bottom , 30)
                             }
                         }.padding(.bottom, 80)
+                        
                         VStack {
                             Text("* check mark the one that resonates with you the most.")
                                 .foregroundColor(.gray)
@@ -485,7 +488,7 @@ struct try_AnsQuestions: View {
                                 .font(.system(size: 12))
                             
                             NavigationLink(
-                                destination: AnsQuestions_Summ(texts: [""], userInputs: userInputs, checkedInput: userInputs[checkedIndex ?? 0], displayedQuestion: dataManager.questions[currentIndex].text),
+                                destination: AnsQuestions_Summ(texts: [""], userInputs: userInputs, checkedInput: userInputs[checkedIndex ?? 0], displayedQuestion: shuffledQuestions[currentIndex].text),
                                 isActive: .constant(false), // Disable default navigation
                                 label: {
                                     Text("Next")
@@ -498,7 +501,7 @@ struct try_AnsQuestions: View {
                             .simultaneousGesture(TapGesture().onEnded {
                                 if nextButtonEnabled {
                                     // Perform the navigation
-                                    NavigationLink(destination: AnsQuestions_Summ(texts: [""], userInputs: userInputs, checkedInput: userInputs[checkedIndex ?? 0], displayedQuestion: dataManager.questions[currentIndex].text)) {
+                                    NavigationLink(destination: AnsQuestions_Summ(texts: [""], userInputs: userInputs, checkedInput: userInputs[checkedIndex ?? 0], displayedQuestion: shuffledQuestions[currentIndex].text)) {
                                         EmptyView()
                                     }
                                 }
@@ -512,17 +515,22 @@ struct try_AnsQuestions: View {
                             .padding()
                     }
                 }
-               // .navigationTitle("Questions")
                 .navigationBarItems(trailing: Button(action: {
                     showPopup.toggle()
                 }, label: {
                     Image(systemName: "plus")
                 }))
                 .sheet(isPresented: $showPopup) {
-                   // NewQuestionView()
+                    // NewQuestionView()
                 }
             }
-        }.navigationBarBackButtonHidden(true)
+        }
+        .navigationBarBackButtonHidden(true)
+        .onAppear {
+            // Shuffle the questions when the view appears
+            shuffledQuestions = dataManager.questions.shuffled()
+            currentIndex = 0
+        }
         .onReceive(timer) { _ in
             if isTimerRunning {
                 if timeRemaining > 0 {
@@ -530,7 +538,7 @@ struct try_AnsQuestions: View {
                 } else {
                     // Timer finished, reset
                     isTimerRunning = false
-                    timeRemaining = 180  // Reset timer for the next question
+                    timeRemaining = 90  // Reset timer for the next question
                 }
             }
         }
@@ -542,12 +550,9 @@ struct try_AnsQuestions: View {
         return !userInputs.contains("") && checkedIndex != nil
     }
 
-    func generateRandomIndex(excluding currentIndex: Int) -> Int {
-        var newIndex: Int
-        repeat {
-            newIndex = Int.random(in: 0..<dataManager.questions.count)
-        } while newIndex == currentIndex && dataManager.questions.count > 1
-        return newIndex
+    func getNextIndex() -> Int {
+        let nextIndex = currentIndex + 1
+        return nextIndex < shuffledQuestions.count ? nextIndex : 0
     }
 
     private let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
@@ -562,6 +567,7 @@ struct try_AnsQuestions: View {
         return String(format: "%02d:%02d", minutes, remainingSeconds)
     }
 }
+
 
 
 struct AnsQuestions_Summ: View {
@@ -714,199 +720,176 @@ NavigationStack{
 
 
 
-
 struct try_RandomWords: View {
-@EnvironmentObject var dataManager: DataManager
-@State private var currentIndex = 0
-@State private var likedWords: [String] = []
-@State private var dragState = CGSize.zero
-@State private var likedWordBoxes: [String?] = Array(repeating: nil, count: 3)
-@State private var isTimerRunning = false
-@State private var timeRemaining = 60
-@State private var navigateToNextPage = false
+    @EnvironmentObject var dataManager: DataManager
+    @State private var currentIndex = 0
+    @State private var likedWords: [String] = []
+    @State private var dragState = CGSize.zero
+    @State private var likedWordBoxes: [String?] = Array(repeating: nil, count: 3)
+    @State private var isTimerRunning = false
+    @State private var timeRemaining = 60
+    @State private var navigateToNextPage = false
+    @State private var shuffledWords: [Word] = []
 
-var timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
-
+    var timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     
-@Environment(\.colorScheme) var colorScheme
-        
+    @Environment(\.colorScheme) var colorScheme
     
-var body: some View {
-NavigationView {
-    ZStack {
-        Color.gray1
-            .ignoresSafeArea()
-        
-        Image("backgrund")
-            .resizable()
-            .frame(width: 400 , height: 150)
-            .padding(.bottom,750)
-
-        VStack {
-            Text("Random Word")
-                .font(.system(size: 29, weight: .semibold))
-                .padding(.bottom,680)
-                .padding(.trailing, 170)
-                .foregroundColor(colorScheme == .dark ? .black : .white)
-        }
-            VStack {
-            Text(timerString)
-                .font(.system(size: 60, weight: .bold))
-                .padding(.top, 150)
-                .padding(.bottom, 20)
-
-            Text("Double-tap meaningful words or swipe to change.")
-                .font(.system(size: 18, weight: .medium))
-                .multilineTextAlignment(.center)
-                .padding(.bottom, 60)
-
-            if !dataManager.words.isEmpty {
-                ZStack {
-                    ForEach(dataManager.words.indices.reversed(), id: \.self) { index in
-                        CardView1(word: dataManager.words[index].text)
-                            .zIndex(currentIndex == index ? 1 : 0)
-                            .offset(x: index == currentIndex ? dragState.width : 0, y: index == currentIndex ? dragState.height : 0)
-                            .rotationEffect(.degrees(Double(dragState.width / 20)), anchor: .bottom)
-                            .gesture(
-                                DragGesture()
-                                    .onChanged { value in
-                                        if index == currentIndex {
-                                            dragState = value.translation
-                                            startTimerIfNeeded()
-                                        }
-                                    }
-                                    .onEnded { value in
-                                        if index == currentIndex {
-                                            if value.translation.width < -100 {
-                                                currentIndex = getNextIndex()
-                                            } else if value.translation.width > 100 {
-                                                currentIndex = getPreviousIndex()
+    var body: some View {
+        NavigationView {
+            ZStack {
+                Color.gray1
+                    .ignoresSafeArea()
+                
+                Image("backgrund")
+                    .resizable()
+                    .frame(width: 400, height: 150)
+                    .padding(.bottom, 750)
+                
+                VStack {
+                    Text("Random Word")
+                        .font(.system(size: 29, weight: .semibold))
+                        .padding(.bottom, 680)
+                        .padding(.trailing, 170)
+                        .foregroundColor(colorScheme == .dark ? .black : .white)
+                }
+                
+                VStack {
+                    Text(timerString)
+                        .font(.system(size: 60, weight: .bold))
+                        .padding(.top, 150)
+                        .padding(.bottom, 20)
+                    
+                    Text("Double-tap meaningful words or swipe to change.")
+                        .font(.system(size: 18, weight: .medium))
+                        .multilineTextAlignment(.center)
+                        .padding(.bottom, 60)
+                    
+                    if !shuffledWords.isEmpty {
+                        ZStack {
+                            ForEach(shuffledWords.indices.reversed(), id: \.self) { index in
+                                CardView1(word: shuffledWords[index].text)
+                                    .zIndex(currentIndex == index ? 1 : 0)
+                                    .offset(x: index == currentIndex ? dragState.width : 0, y: index == currentIndex ? dragState.height : 0)
+                                    .rotationEffect(.degrees(Double(dragState.width / 20)), anchor: .bottom)
+                                    .gesture(
+                                        DragGesture()
+                                            .onChanged { value in
+                                                if index == currentIndex {
+                                                    dragState = value.translation
+                                                    startTimerIfNeeded()
+                                                }
                                             }
-                                            dragState = .zero
-                                        }
-                                    }
-                            )
-                            .animation(.spring(), value: dragState)
-                            .animation(.spring(), value: currentIndex)
-                    }
-                    
-                    
-                    RoundedRectangle(cornerRadius: 10)
-                   .foregroundColor(Color.white1) // Background color of the card
-                   .shadow(color: colorScheme == .dark ? Color.gray.opacity(0.1) : Color.gray.opacity(0.5), radius: 10, x: 0, y: 2) // Add shadow
-                   .frame(width: 300, height: 280)
-                   .rotationEffect(.degrees(7))
-                    
-                    
-                }
-                .onTapGesture(count: 2) {
-                    if likedWords.count < 3 {
-                        let word = dataManager.words[currentIndex].text
-                        if !likedWords.contains(word) {
-                            likedWords.append(word)
-                            updateLikedWordBoxes()
-                            currentIndex = getNextIndex()
+                                            .onEnded { value in
+                                                if index == currentIndex {
+                                                    if value.translation.width < -100 {
+                                                        currentIndex = getNextIndex()
+                                                    } else if value.translation.width > 100 {
+                                                        currentIndex = getPreviousIndex()
+                                                    }
+                                                    dragState = .zero
+                                                }
+                                            }
+                                    )
+                                    .animation(.spring(), value: dragState)
+                                    .animation(.spring(), value: currentIndex)
+                            }
+                            RoundedRectangle(cornerRadius: 10)
+                                .foregroundColor(Color.white1)
+                                .shadow(color: colorScheme == .dark ? Color.gray.opacity(0.1) : Color.gray.opacity(0.5), radius: 10, x: 0, y: 2)
+                                .frame(width: 300, height: 280)
+                                .rotationEffect(.degrees(7))
                         }
-                        startTimerIfNeeded()
+                        .onTapGesture(count: 2) {
+                            if likedWords.count < 3 {
+                                let word = shuffledWords[currentIndex].text
+                                if !likedWords.contains(word) {
+                                    likedWords.append(word)
+                                    updateLikedWordBoxes()
+                                    currentIndex = getNextIndex()
+                                }
+                                startTimerIfNeeded()
+                            }
+                        }
+                        .padding(.horizontal)
+                    } else {
+                        Text("No words available").padding()
+                    }
+                    
+                    HStack(spacing: 20) {
+                        ForEach(0..<3) { index in
+                            LikedWordBox(word: likedWordBoxes[index] ?? "")
+                        }
+                    }
+                    .padding(.top, 50)
+                    
+                    Button(action: {
+                        navigateToNextPage = likedWords.count >= 3
+                    }) {
+                        Text("Next Step")
+                            .font(.system(size: 18))
+                            .padding()
+                            .frame(width: 337, height: 39)
+                            .background(Color.button)
+                            .foregroundColor(.white)
+                            .clipShape(RoundedRectangle(cornerRadius: 5))
+                            .opacity(likedWords.count >= 3 ? 1.0 : 0.5)
+                            .disabled(likedWords.count < 3)
+                    }
+                    .padding(.top, 20)
+                    .padding(.bottom, 30)
+                }
+                .onReceive(timer) { _ in
+                    if isTimerRunning {
+                        if timeRemaining > 0 {
+                            timeRemaining -= 1
+                        } else {
+                            isTimerRunning = false
+                            navigateToNextPage = true
+                        }
                     }
                 }
-                .padding(.horizontal)
-            } else {
-                Text("No words available").padding()
             }
-
-
-            HStack(spacing: 20) {
-                ForEach(0..<3) { index in
-                    LikedWordBox(word: likedWordBoxes[index] ?? "")
+            .background(
+                NavigationLink(destination: try_RandomWords2(likedWords: likedWords), isActive: $navigateToNextPage) {
+                    EmptyView()
                 }
+            )
+            .onAppear {
+                shuffledWords = dataManager.words.shuffled()
             }
-            .padding(.top, 50)
-                Button(action: {
-                    navigateToNextPage = likedWords.count >= 3
-                }) {
-                    Text("Next Step")
-                        .font(.system(size: 18))
-                        .padding()
-//                            .background(likedWords.count >= 3 ? Color.orange : Color.gray)
-                        .frame(width: 337, height: 39)
-                        .background(Color.button)
-                        .foregroundColor(.white)
-                        .clipShape(RoundedRectangle(cornerRadius: 5))
-                        .opacity(likedWords.count >= 3 ? 1.0 : 0.5)
-                        .disabled(likedWords.count < 3)
-                }
-                .padding(.top, 20)
-                .padding(.bottom, 30)
-//            HStack {
-////                NavigationLink(
-////                                        destination: try_RandomWords2(likedWords: likedWords),
-////                                        isActive: .constant(likedWords.count >= 3),
-////                                        label: {
-////                                            Text("")
-////                                                .font(.system(size: 18))
-////                                                .padding()
-////                                                .background(Color.clear)
-////                                                .foregroundColor(.white)
-////                                                .cornerRadius(10)
-////                                        }
-////                                    )
-//            }
-//            .padding(.top, 30)
         }
-        .onReceive(timer) { _ in
-            if isTimerRunning {
-                if timeRemaining > 0 {
-                    timeRemaining -= 1
-                } else {
-                    isTimerRunning = false
-                    navigateToNextPage = true
-                }
-            }
+        .navigationBarBackButtonHidden(true)
+    }
+    
+    var timerString: String {
+        let minutes = timeRemaining / 60
+        let seconds = timeRemaining % 60
+        return String(format: "%02d:%02d", minutes, seconds)
+    }
+    
+    func startTimerIfNeeded() {
+        if !isTimerRunning {
+            isTimerRunning = true
+            timeRemaining = 60
         }
     }
-    .background(
-        NavigationLink(destination: try_RandomWords2(likedWords: likedWords), isActive: $navigateToNextPage) {
-            EmptyView()
+    
+    func getNextIndex() -> Int {
+        let nextIndex = currentIndex + 1
+        return nextIndex < shuffledWords.count ? nextIndex : 0
+    }
+    
+    func getPreviousIndex() -> Int {
+        let previousIndex = currentIndex - 1
+        return previousIndex >= 0 ? previousIndex : shuffledWords.count - 1
+    }
+    
+    func updateLikedWordBoxes() {
+        for (index, word) in likedWords.enumerated() {
+            likedWordBoxes[index] = word
         }
-    )
-}.navigationBarBackButtonHidden(true)
-}
-
-var timerString: String {
-let minutes = timeRemaining / 60
-let seconds = timeRemaining % 60
-
-if minutes < 10 {
-    return String(format: "%d:%02d", minutes, seconds)
-} else {
-    return String(format: "%02d:%02d", minutes, seconds)
-}
-}
-
-func startTimerIfNeeded() {
-if !isTimerRunning {
-    isTimerRunning = true
-    timeRemaining = 60
-}
-}
-
-func getNextIndex() -> Int {
-let nextIndex = currentIndex + 1
-return nextIndex < dataManager.words.count ? nextIndex : 0
-return nextIndex
-}
-
-func getPreviousIndex() -> Int {
-let previousIndex = currentIndex - 1
-return previousIndex >= 0 ? previousIndex : dataManager.words.count - 1
-}
-
-func updateLikedWordBoxes() {
-for (index, word) in likedWords.enumerated() {
-    likedWordBoxes[index] = word
-}
-}
+    }
 }
 
 
