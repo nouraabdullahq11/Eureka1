@@ -6,6 +6,7 @@
 //
 
 
+
 import SwiftUI
 import CoreHaptics
 import Lottie
@@ -821,22 +822,37 @@ NavigationView {
                 }
             }
             .padding(.top, 50)
-
-            HStack {
-                NavigationLink(
-                                        destination: try_RandomWords2(likedWords: likedWords),
-                                        isActive: .constant(likedWords.count >= 3),
-                                        label: {
-                                            Text("")
-                                                .font(.system(size: 18))
-                                                .padding()
-                                                .background(Color.clear)
-                                                .foregroundColor(.white)
-                                                .cornerRadius(10)
-                                        }
-                                    )
-            }
-            .padding(.top, 30)
+                Button(action: {
+                    navigateToNextPage = likedWords.count >= 3
+                }) {
+                    Text("Next Step")
+                        .font(.system(size: 18))
+                        .padding()
+//                            .background(likedWords.count >= 3 ? Color.orange : Color.gray)
+                        .frame(width: 337, height: 39)
+                        .background(Color.button)
+                        .foregroundColor(.white)
+                        .clipShape(RoundedRectangle(cornerRadius: 5))
+                        .opacity(likedWords.count >= 3 ? 1.0 : 0.5)
+                        .disabled(likedWords.count < 3)
+                }
+                .padding(.top, 20)
+                .padding(.bottom, 30)
+//            HStack {
+////                NavigationLink(
+////                                        destination: try_RandomWords2(likedWords: likedWords),
+////                                        isActive: .constant(likedWords.count >= 3),
+////                                        label: {
+////                                            Text("")
+////                                                .font(.system(size: 18))
+////                                                .padding()
+////                                                .background(Color.clear)
+////                                                .foregroundColor(.white)
+////                                                .cornerRadius(10)
+////                                        }
+////                                    )
+//            }
+//            .padding(.top, 30)
         }
         .onReceive(timer) { _ in
             if isTimerRunning {
@@ -902,10 +918,11 @@ struct try_RandomWords2: View {
     @State private var showNextButton: Bool = false
     @State private var navigateToSummary: Bool = false
     @State private var isTimerRunning = false
-    @State private var timeRemaining = 6
+    @State private var timeRemaining = 120
     @State private var checkedIndex: Int? = nil  // Optional Int to keep track of which checkbox is checked
 
     @Environment(\.colorScheme) var colorScheme
+    @State private var timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
 
     init(likedWords: [String]) {
         self.likedWords = likedWords
@@ -939,119 +956,113 @@ struct try_RandomWords2: View {
                             .padding(.top, 95)
                             .padding(.trailing, 170)
                             .foregroundColor(colorScheme == .dark ? .black : .white)
-
+                        
                         Text(timerString)
                             .font(.system(size: 60, weight: .bold))
                             .padding(.top, 25)
                             .padding(.bottom, 20)
-
+                            .onReceive(timer) { _ in
+                                if isTimerRunning {
+                                    if timeRemaining > 0 {
+                                        timeRemaining -= 1
+                                    } else {
+                                        navigateToSummary = true
+                                        isTimerRunning = false
+                                    }
+                                }
+                            }
+                        
+                        
                         Text("Place these words into possible ideas or solutions:")
                             .font(.system(size: 17, weight: .medium))
                             .padding(.bottom, 30)
                             .padding(.trailing, 50)
-
+                        
+                        
                         VStack {
                             ForEach(0..<likedWords.count, id: \.self) { index in
-                                VStack {
-                                    HStack {
+                                VStack(alignment: .leading) {
+                                    //                                    Text(likedWords[index])
+                                    //                                        .font(.system(size: 18))
+                                    HStack{
                                         Text("First word:")
                                             .font(.system(size: 15))
                                             .padding(.bottom, 10)
-                                            .padding(.leading, -160)
+                                            .padding(.leading, 50)
+                                            .foregroundColor(.gray)
                                         Text(likedWords[index])
                                             .font(.system(size: 15))
                                             .padding(.bottom, 10)
-                                            .padding(.leading, -90)
+                                            .padding(.leading, 5)
+                                            .foregroundColor(.gray)
                                     }
-                                    .padding(.leading, 50)
-                                    .foregroundColor(.gray)
-
-                                    TextField("Enter The Sentence", text: $enteredValues[index])
-                                        .padding()
-                                        .frame(width: 300, height: 40)
-                                        .background(
-                                            RoundedRectangle(cornerRadius: 10)
-                                                .foregroundColor(Color.white)
-                                                .shadow(radius: 3)
-                                        )
-                                        .padding(.bottom, 25)
-                                        .padding(.leading, 15)
-                                        .overlay(
-                                            Image(systemName: checkedIndex == index ? "checkmark.circle.fill" : "circle")
-                                                .resizable()
-                                                .foregroundColor(checkedIndex == index ? Color.button : Color.gray)
-                                                .frame(width: 22, height: 22)
-                                                .padding(.trailing, 350)
-                                                .onTapGesture {
-                                                    if checkedIndex == index {
-                                                        checkedIndex = nil  // Uncheck if already checked
-                                                    } else {
-                                                        checkedIndex = index  // Check new index
-                                                    }
-                                                }
-                                        )
+                                    HStack {
+                                        
+                                        Image(systemName: selectedWord == likedWords[index] ? "checkmark.circle.fill" : "circle")
+                                            .resizable()
+                                            .frame(width: 20, height: 20)
+                                            .foregroundColor(.button)
+                                            .onTapGesture {
+                                                selectedWord = likedWords[index]
+                                            }
+                                        TextField("Enter a value", text: $enteredValues[index])
+                                            .textFieldStyle(RoundedBorderTextFieldStyle())
+                                            .onChange(of: enteredValues[index]) { newValue in
+                                                startTimerIfNeeded()
+                                            }
+                                    }.padding(.trailing,20)
+                                        .padding(.leading,20)
                                 }
-                                .frame(maxWidth: .infinity)
+                                .padding(.bottom, 10)
                             }
-
-                            Button(action: {
-                                showCheckmarks = true
-                            }) {
-                                Text("Next Step")
-                                    .frame(width: 337, height: 39)
-                                    .background(isNextStepButtonEnabled ? Color.orange : Color.gray)
-                                    .foregroundColor(.white)
-                                    .clipShape(RoundedRectangle(cornerRadius: 10))
-                                    .font(.system(size: 20, weight: .bold))
-                                    .opacity(isNextStepButtonEnabled ? 1.0 : 0.5)
-                            }
-                            .disabled(!isNextStepButtonEnabled)
                         }
-
-                        if showCheckmarks {
-                            Text("Place these words into possible ideas or solutions:")
-                                .font(.system(size: 20, weight: .semibold))
-
-                            ForEach(likedWords, id: \.self) { word in
-                                HStack {
-                                    Image(systemName: selectedWord == word ? "checkmark.square.fill" : "square")
-                                        .resizable()
-                                        .frame(width: 20, height: 20)
-                                        .foregroundColor(.blue)
-                                        .onTapGesture {
-                                            selectedWord = word
-                                            showNextButton = true
-                                        }
-
-                                    Text(word)
-                                        .font(.system(size: 18))
-                                }
-                            }
-                            Button(action: {
-                                navigateToSummary = true
-                            }) {
-                                Text("Next")
-                                    .font(.system(size: 20, weight: .bold))
-                                    .padding()
-                                    .foregroundColor(.white)
-                                    .background(isNextButtonEnabled ? Color.orange : Color.gray)
-                                    .cornerRadius(10)
-                                    .opacity(isNextButtonEnabled ? 1.0 : 0.5)
-                            }
-                            .disabled(!isNextButtonEnabled)
+                        VStack{
+                            
+                            Text("* check mark the word that resonates with you the most.")
+                                .font(.system(size: 12, weight: .regular))
+                                .foregroundColor(.gray)
+                            
+                            
+                        } .padding(.top, 100)
+                        Button(action: {
+                            navigateToSummary = selectedWord != nil
+                        }) {
+                            Text("Next Step")
+                                .font(.system(size: 18))
+                                .padding()
+    //                            .background(likedWords.count >= 3 ? Color.orange : Color.gray)
+                                .frame(width: 337, height: 39)
+                                .background(Color.button)
+                                .foregroundColor(.white)
+                                .clipShape(RoundedRectangle(cornerRadius: 5))
+                                .opacity(selectedWord != nil ? 1.0 : 0.5)
+                                .disabled(selectedWord == nil)
                         }
-
-                        NavigationLink(
-                            destination: RWSummary(
-                                texts: [""],
-                                selectedWord: selectedWord,
-                                enteredValue: enteredValues[likedWords.firstIndex(of: selectedWord ?? "") ?? 0]
-                            ),
-                            isActive: $navigateToSummary
-                        ) {
-                            EmptyView()
-                        }
-                    }
+                        .padding(.top, 5)
+                        .padding(.bottom, 30)
+                        
+                        if selectedWord != nil {
+                            NavigationLink(
+                                destination: RWSummary(
+                                    texts: [""],
+                                    selectedWord: selectedWord,
+                                    enteredValue: enteredValues[likedWords.firstIndex(of: selectedWord ?? "") ?? 0]
+                                ),
+                                isActive: $navigateToSummary
+                            ) {
+                               EmptyView()
+                            }
+                        }}
+                }
+            }
+        }
+        .onReceive(timer) { _ in
+            if isTimerRunning {
+                if timeRemaining > 0 {
+                    timeRemaining -= 1
+                } else {
+                    isTimerRunning = false
+                    navigateToSummary = true
                 }
             }
         }
@@ -1059,8 +1070,8 @@ struct try_RandomWords2: View {
     }
 
     var timerString: String {
-        let minutes = timeRemaining / 6
-        let seconds = timeRemaining % 6
+        let minutes = timeRemaining / 60
+        let seconds = timeRemaining % 60
 
         if minutes < 10 {
             return String(format: "%d:%02d", minutes, seconds)
@@ -1072,7 +1083,7 @@ struct try_RandomWords2: View {
     func startTimerIfNeeded() {
         if !isTimerRunning {
             isTimerRunning = true
-            timeRemaining = 6
+            timeRemaining = 120
         }
     }
 }
@@ -1121,143 +1132,147 @@ struct RWSummary: View {
 var texts: [String]
 var selectedWord: String?
 var enteredValue: String
+    @Environment(\.colorScheme) var colorScheme
 
 var body: some View {
 NavigationStack{
-    ScrollView{(
-        ZStack{
-            Color.gray1
-                .ignoresSafeArea()
+    ZStack{
+        
+        Color.gray1
+            .ignoresSafeArea()
+
+        Image("backgrund")
+            .resizable()
+            .frame(width: 400, height: 150)
+            .padding(.bottom, 750)
+        
+        VStack {
+            Text("Activity Summery")
+                .font(.system(size: 29, weight: .semibold))
+                .frame(width: 250)
+                .padding(.bottom,680)
+                .padding(.trailing, 120)
+                .foregroundColor(colorScheme == .dark ? .black : .white)
+        }
+        
+        ScrollView{(
+            
             VStack{
-                ZStack{
-                    Image("backgrund")
-                        .resizable()
-                        .frame(width: 395 , height: 150)
-                    
-                    Text("Activity Summery")
-                        .font(.title)
-                        .bold()
-                        .foregroundColor(.white)
-                        .padding(.trailing , 100)
-                    //  .padding(.bottom,600)
-                }.offset(x:0,y: -100)
                 
-                ZStack{
+                VStack{
                     RoundedRectangle(cornerRadius: 10)
                         .foregroundColor(.white)
                         .shadow(radius: 3)
-                        .frame(width: 351,height: 132)
-                    HStack{
-                        
-                        Image(systemName: "lightbulb.min")
-                            .resizable()
-                            .frame(width: 41 , height: 53)
-                            .foregroundColor(.orange1)
-                        VStack{
-                            
-                            if let selectedWord = selectedWord {
-                                Text(" Through your experience, you have come to big idea: \(selectedWord) ")
-                                    .font(.caption)
-                                    .padding(.horizontal)
-                            }}
-                    } .padding(.horizontal)
-                }
-                ZStack{
+                        .frame(width: 351,height: 132).overlay(
+                            HStack{
+                                
+                                Image(systemName: "lightbulb.min")
+                                    .resizable()
+                                    .frame(width: 41 , height: 53)
+                                    .foregroundColor(.orange1)
+                                VStack{
+                                    
+                                    if let selectedWord = selectedWord {
+                                        Text(" Through your experience, you have come to big idea: \(selectedWord) ")
+                                            .font(.system(size: 12, weight: .regular))
+                                            .padding(.horizontal)
+                                    }}
+                            } .padding(.horizontal)
+                        )
+                   
                     RoundedRectangle(cornerRadius: 10)
                         .foregroundColor(.white)
                         .shadow(radius: 3)
                         .frame(width: 361,height: 132)
-                    HStack{
-                        Image(systemName: "doc.text")
-                            .resizable()
-                            .frame(width: 41 , height: 53)
-                            .foregroundColor(.orange1)
-                        
-                        VStack{
-                            Text("Your statement:")
-                            
-                                .font(.title)
-                                .bold()
-                                .padding()
-                            Text("\(enteredValue)")
-                            VStack {
-                                ForEach(0..<min(texts.count, 3)) { index in
-                                    Text(texts[index])
-                            .foregroundColor(.orange1)
+                        .overlay(
+                            HStack{
+                                Image(systemName: "doc.text")
+                                    .resizable()
+                                    .frame(width: 41 , height: 53)
+                                    .foregroundColor(.orange1)
+                                
+                                VStack{
+                                    Text("Your statement: ")
+                                        .font(.system(size: 12, weight: .regular))
+//                                    Text("\(enteredValue)")
+//                                        .frame(width: 300 )
+                                    VStack {
+                                        ForEach(0..<min(texts.count, 3)) { index in
+                                            Text(texts[index])
+                                                .foregroundColor(.orange1)
+                                        }
+                                        
+                                        if showAllTexts {
+                                            ForEach(additionalTexts.indices, id: \.self) { index in
+                                                Text(additionalTexts[index])
+                                                    .foregroundColor(.orange1)
+                                            }
+                                        }
+                                    }
+//                                    .padding()
+                                }.padding()
+                                if texts.count > 3 {
+                                    Button(action: {
+                                        showAllTexts.toggle()
+                                        if showAllTexts {
+                                            additionalTexts = Array(texts.dropFirst(3))
+                                        } else {
+                                            additionalTexts.removeAll()
+                                        }
+                                    }) {
+                                        Text(showAllTexts ? "See Less" : "See all answer")
+                                            .font(.caption)
+                                            .underline(true , color: .orange1)
+                                            .foregroundColor(.orange1)
+                                    }  .padding()
                                 }
                                 
-                                if showAllTexts {
-                                    ForEach(additionalTexts.indices, id: \.self) { index in
-                                        Text(additionalTexts[index])
-                            .foregroundColor(.orange1)
-                                    }
-                                }
-                            }
-                            .padding()
-                        }
-                        if texts.count > 3 {
-                            Button(action: {
-                                showAllTexts.toggle()
-                                if showAllTexts {
-                                    additionalTexts = Array(texts.dropFirst(3))
-                                } else {
-                                    additionalTexts.removeAll()
-                                }
-                            }) {
-                                Text(showAllTexts ? "See Less" : "See all answer")
-                                    .font(.caption)
-                                    .underline(true , color: .orange1)
-                                    .foregroundColor(.orange1)
-                            }  .padding()
-                        }
-                        
-                        
-                        
-                        Spacer()
-                        
-                    }
-                }
-                ZStack{
+                                
+                                
+                                Spacer()
+                                
+                            }.padding(.horizontal)
+                        )
+                    
                     RoundedRectangle(cornerRadius: 10)
                         .foregroundColor(.white)
                         .shadow(radius: 3)
-                        .frame(width: 361,height: 200)
-                    HStack{
-                        Image(systemName: "checkmark.circle")
-                            .resizable()
-                            .frame(width: 41 , height: 53)
-                            .foregroundColor(.orange1)
-                        VStack{
-                            Text("Fantastic work on sparking your big idea! Are you ready to dive even deeper and expand your creative horizons? ")
-                                .font(.callout)
-                                .bold()
-                            Text("Let's keep the momentum going try the other technique, it will enhance your ability to think outside the box and refine your concepts.")
-                                .font(.caption)
-                        }
-                    }
+                        .frame(width: 361,height: 200).overlay(
+                            HStack{
+                                Image(systemName: "checkmark.circle")
+                                    .resizable()
+                                    .frame(width: 41 , height: 53)
+                                    .foregroundColor(.orange1)
+                                VStack{
+                                    Text("Fantastic work on sparking your big idea! Are you ready to dive even deeper and expand your creative horizons? ")
+                                        .font(.callout)
+                                        .bold()
+                                    Text("Let's keep the momentum going try the other technique, it will enhance your ability to think outside the box and refine your concepts.")
+                                        .font(.caption)
+                                }
+                            })
+                    
                 }
-                
                 NavigationLink(destination: HomePage()){
                     
-                    ZStack{
-                        Rectangle()
-                            .frame(width: 337 , height: 39)
-                            .cornerRadius(5)
-                            .foregroundColor(.laitOrange)
-                        Text("done")
-                            .foregroundColor(.white)
-                    } .padding()
+                    
+                    Rectangle()
+                        .frame(width: 337 , height: 39)
+                        .cornerRadius(5)
+                        .foregroundColor(.laitOrange)
+                    Text("done")
+                        .foregroundColor(.white)
+                    
                 }
-               
-            }
-      
-            }
-  
-   )}
+                
+            }.padding(.top , 200)
+            
+            // }
+            
+        )}}
 }.navigationBarBackButtonHidden(true)
 }
 }
-
 struct try_ReverseBrainstorming: View {
     struct TopLeadingTextFieldStyle: TextFieldStyle {
         func _body(configuration: TextField<Self._Label>) -> some View {
