@@ -1127,7 +1127,7 @@ NavigationStack{
         Image("backgrund")
             .resizable()
             .frame(width: 400, height: 150)
-            .padding(.bottom, 750)
+            .padding(.bottom, 800)
         
         VStack {
             Text("Activity Summery")
@@ -1158,11 +1158,12 @@ NavigationStack{
                                     if let selectedWord = selectedWord {
                                         Text(" Through your experience, you have come to big idea: \(selectedWord) ")
                                             .font(.system(size: 12, weight: .regular))
+                                            .multilineTextAlignment(.leading)
                                             .padding(.horizontal)
                                     }}
                             } .padding(.horizontal)
                         )
-                   
+                        .padding()
                     RoundedRectangle(cornerRadius: 10)
                         .foregroundColor(.white)
                         .shadow(radius: 3)
@@ -1217,24 +1218,33 @@ NavigationStack{
                             }.padding(.horizontal)
                         )
                     
-                    RoundedRectangle(cornerRadius: 10)
-                        .foregroundColor(.white)
-                        .shadow(radius: 3)
-                        .frame(width: 361,height: 200).overlay(
-                            HStack{
-                                Image(systemName: "checkmark.circle")
-                                    .resizable()
-                                    .frame(width: 41 , height: 53)
-                                    .foregroundColor(.orange1)
-                                VStack{
-                                    Text("Fantastic work on sparking your big idea! Are you ready to dive even deeper and expand your creative horizons? ")
-                                        .font(.callout)
-                                        .bold()
-                                    Text("Let's keep the momentum going try the other technique, it will enhance your ability to think outside the box and refine your concepts.")
-                                        .font(.caption)
-                                }
-                            })
-                    
+                    ZStack{
+                                           RoundedRectangle(cornerRadius: 10)
+                                               .foregroundColor(.white)
+                                               .shadow(radius: 3)
+                                               .frame(width: 361,height: 200)
+                                               .padding()
+                                           VStack{
+                                               HStack{
+                                                   Image(systemName: "checkmark.circle")
+                                                       .resizable()
+                                                       .frame(width: 53 , height: 53)
+                                                       .foregroundColor(.orange1)
+                                                       .padding(.horizontal)
+                                                   
+                                                   Text("Fantastic work on sparking your big idea! Are you ready to dive even deeper and expand your creative horizons? ")
+                                                       .font(.callout)
+                                                       .bold()
+                                                       .padding()
+                                               }
+                                               VStack{
+                                                   Text("Let's keep the momentum going try the other technique, it will enhance your ability to think outside the box and refine your concepts.")
+                                                       .font(.caption)
+                                                      // .padding(.horizontal)
+                                               }
+                                           }
+                                       } .padding(.horizontal)
+
                 }
                 NavigationLink(destination: HomePage()){
                     
@@ -1625,138 +1635,155 @@ var texts: [String]
 @State private var additionalTexts: [String] = []
  var statement2 = ""
 var body: some View {
-NavigationStack{
-    ScrollView{(
-        ZStack{
-            Color.gray1
-                .ignoresSafeArea()
-            VStack{
-                ZStack{
-                    Image("backgrund")
-                        .resizable()
-                        .frame(width: 395 , height: 150)
-                    
-                    Text("Activity Summery")
-                        .font(.title)
-                        .bold()
-                        .foregroundColor(.white)
-                        .padding(.trailing , 100)
-                    //  .padding(.bottom,600)
-                }.offset(x:0,y: -100)
-                
-                ZStack{
-                    RoundedRectangle(cornerRadius: 10)
-                        .foregroundColor(.white)
-                        .shadow(radius: 3)
-                        .frame(width: 351,height: 132)
-                    HStack{
-                        
-                        Image(systemName: "lightbulb.min")
-                            .resizable()
-                            .frame(width: 41 , height: 53)
-                            .foregroundColor(.orange1)
-                        VStack{
-                            Text(" Research time :")
-                                .bold()
-                                .font(.title3)
-                            Text(" By exploring, researching, and iterating, you're paving the way for success. Dive deeper into your big idea and you're on the path to something remarkable!")
-                                .font(.caption)
-                                .padding(.horizontal)
+    NavigationStack{
+        ScrollView{(
+            ZStack{
+                Color.gray1
+                    .ignoresSafeArea()
+              
+                    VStack{
+                        ZStack {
+                            Image("backgrund")
+                                .resizable()
+                                .overlay(
+                                    Text("Activity Summery")
+                                        .font(.title2)
+                                        .bold()
+                                        .foregroundColor(.white)
+                                        .padding(.trailing, 120)
+                                        .padding(.top, 70)
+                                )
+                                .frame(width: 400, height: 150)
+                                .offset(x: 0 , y: -90)
                         }
-                    } .padding(.horizontal)
-                }
-                ZStack{
-                    RoundedRectangle(cornerRadius: 10)
-                        .foregroundColor(.white)
-                        .shadow(radius: 3)
-                        .frame(width: 361,height: 132)
-                    HStack{
-                        Image(systemName: "doc.text")
-                            .resizable()
-                            .frame(width: 41 , height: 53)
-                            .foregroundColor(.orange1)
                         
-                        VStack{
-                            Text("Solution :")
-                                .font(.title)
-                                .bold()
+                        ZStack{
+                            RoundedRectangle(cornerRadius: 10)
+                                .foregroundColor(.white)
+                                .shadow(radius: 3)
+                                .frame(width: 351,height: 132)
+                            HStack{
+                                
+                                Image(systemName: "lightbulb.min")
+                                    .resizable()
+                                    .frame(width: 48 , height: 53)
+                                    .foregroundColor(.orange1)
+                                    .padding(.horizontal)
+                                VStack{
+                                    Text(" Research time :")
+                                        .bold()
+                                        .font(.title3)
+                                       // .padding(.horizontal)
+                                        .padding(.trailing , 105)
+                                    Text(" By exploring, researching, and iterating, you're paving the way for success. Dive deeper into your big idea and you're on the path to something remarkable!")
+                                        .font(.caption)
+                                        .padding(.horizontal)
+                                }
+                            } .padding(.horizontal)
+                        }
+                        ZStack{
+                            RoundedRectangle(cornerRadius: 10)
+                                .foregroundColor(.white)
+                                .shadow(radius: 3)
+                                .frame(width: 361,height: 132)
                                 .padding()
-                            Text("\(statement2) ")
-                            VStack {
-                                ForEach(0..<min(texts.count, 3)) { index in
-                                    Text(texts[index])
-                            .foregroundColor(.orange1)
+                            HStack{
+                                Image(systemName: "doc.text")
+                                    .resizable()
+                                    .frame(width: 41 , height: 53)
+                                    .foregroundColor(.orange1)
+                                    .padding(.horizontal)
+                                
+                                VStack{
+                                    Text("Solution :")
+                                        .font(.title3)
+                                        .bold()
+                                        .padding()
+                                    Text("\(statement2) ")
+                                    VStack {
+                                        ForEach(0..<min(texts.count, 3)) { index in
+                                            Text(texts[index])
+                                                .foregroundColor(.orange1)
+                                        }
+                                        
+                                        if showAllTexts {
+                                            ForEach(additionalTexts.indices, id: \.self) { index in
+                                                Text(additionalTexts[index])
+                                                    .foregroundColor(.orange1)
+                                            }
+                                        }
+                                    }
+                                    .padding()
+                                }
+                                if texts.count > 3 {
+                                    Button(action: {
+                                        showAllTexts.toggle()
+                                        if showAllTexts {
+                                            additionalTexts = Array(texts.dropFirst(3))
+                                        } else {
+                                            additionalTexts.removeAll()
+                                        }
+                                    }) {
+                                        Text(showAllTexts ? "See Less" : "See all answer")
+                                            .font(.caption)
+                                            .underline(true , color: .orange1)
+                                            .foregroundColor(.orange1)
+                                    } // .padding()
                                 }
                                 
-                                if showAllTexts {
-                                    ForEach(additionalTexts.indices, id: \.self) { index in
-                                        Text(additionalTexts[index])
-                            .foregroundColor(.orange1)
-                                    }
+                                
+                                
+                                Spacer()
+                                
+                            }
+                            .padding(.horizontal)
+                        }
+               
+                        ZStack{
+                            RoundedRectangle(cornerRadius: 10)
+                                .foregroundColor(.white)
+                                .shadow(radius: 3)
+                                .frame(width: 361,height: 200)
+                                .padding()
+                            VStack{
+                                HStack{
+                                    Image(systemName: "checkmark.circle")
+                                        .resizable()
+                                        .frame(width: 53 , height: 53)
+                                        .foregroundColor(.orange1)
+                                        .padding(.horizontal)
+                                    
+                                    Text("Fantastic work on sparking your big idea! Are you ready to dive even deeper and expand your creative horizons? ")
+                                        .font(.callout)
+                                        .bold()
+                                        .padding()
+                                }
+                                VStack{
+                                    Text("Let's keep the momentum going try the other technique, it will enhance your ability to think outside the box and refine your concepts.")
+                                        .font(.caption)
+                                       // .padding(.horizontal)
                                 }
                             }
-                            .padding()
+                        } .padding(.horizontal)
+                        
+                        NavigationLink(destination: HomePage()){
+                            
+                            ZStack{
+                                Rectangle()
+                                    .frame(width: 337 , height: 39)
+                                    .cornerRadius(5)
+                                    .foregroundColor(.laitOrange)
+                                Text("done")
+                                    .foregroundColor(.white)
+                            }
                         }
-                        if texts.count > 3 {
-                            Button(action: {
-                                showAllTexts.toggle()
-                                if showAllTexts {
-                                    additionalTexts = Array(texts.dropFirst(3))
-                                } else {
-                                    additionalTexts.removeAll()
-                                }
-                            }) {
-                                Text(showAllTexts ? "See Less" : "See all answer")
-                                    .font(.caption)
-                                    .underline(true , color: .orange1)
-                                    .foregroundColor(.orange1)
-                            }  .padding()
-                        }
-                        
-                        
-                        
-                        Spacer()
                         
                     }
-                }
-                ZStack{
-                    RoundedRectangle(cornerRadius: 10)
-                        .foregroundColor(.white)
-                        .shadow(radius: 3)
-                        .frame(width: 361,height: 200)
-                    HStack{
-                        Image(systemName: "checkmark.circle")
-                            .resizable()
-                            .frame(width: 41 , height: 53)
-                            .foregroundColor(.orange1)
-                        VStack{
-                            Text("Fantastic work on sparking your big idea! Are you ready to dive even deeper and expand your creative horizons? ")
-                                .font(.callout)
-                                .bold()
-                            Text("Let's keep the momentum going try the other technique, it will enhance your ability to think outside the box and refine your concepts.")
-                                .font(.caption)
-                        }
-                    }
-                }
-                
-                NavigationLink(destination: HomePage()){
                     
-                    ZStack{
-                        Rectangle()
-                            .frame(width: 337 , height: 39)
-                            .cornerRadius(5)
-                            .foregroundColor(.laitOrange)
-                        Text("done")
-                            .foregroundColor(.white)
-                    } .padding()
-                }
-               
+                
             }
-      
-            }
-  
-   )}
-}.navigationBarBackButtonHidden(true)
+       )}
+    }.navigationBarBackButtonHidden(true)
 }
 }
 
